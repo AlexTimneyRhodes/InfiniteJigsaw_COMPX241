@@ -1,16 +1,67 @@
 <html>
   <%- include('./partials/head.ejs') %>
+  <head>
+    <style>
+      * {
+          padding: 0;
+          margin: 0;
+          color: #333;
+          box-sizing: border-box;
+          word-wrap: break-word;
+          font-family: -apple-system,BlinkMacSystemFont,
+          Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
+      }
+      .leaderboard-item{
+        background-color: whitesmoke;
+      }
+      .l0{
+        background-color: gold;
+      }
+      .l1{
+        background-color: silver;
+      }
+      .l2{
+        background-color: 	rgb(205, 127, 50);
+      }
+
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      li p {
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration: none;
+        font-style: normal;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        padding: 16px 14px;
+      }
+
+      li small{
+        display: block;
+      }
+    </style>
+  </head>
   <body>
     <%- include('header') %>
-    <h1>leaderboard</h1>
-    <form method="post" action="/leaderboard">
+    <!-- <form method="post" action="/leaderboard">
       <button type="submit">load data</button>
-    </form>
+    </form> -->
     <% if(data != null) { %>
       <ul>
         <% for(var i = 0; i < data.length;i++){ %>
-          <li>
-            <%= data[i].username + " " + data[i].highscore%>
+          <li class="leaderboard-item l<%=i%>">
+            <p>
+              <%= data[i].username %>
+              <small>
+                <%= "Score: " + data[i].highscore %>
+              </small>
+            </p>
+
           </li>
         <% } %>
       </ul>

@@ -3,7 +3,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const port = 3000;
+const port = 3030;
 
 // Loading databse
 const db = require('./db');
@@ -40,10 +40,12 @@ app.get('/puzzle', (req, res) => {
     res.redirect('/login')
   }
 });
-app.get('/leaderboard', (req, res) => {
+app.get('/leaderboard', async (req, res) => {
   // checking credentials
   if(req.session.loggedIn){
-    res.render('leaderboard', {data: []});
+    // getting data
+    const result = await db.loadLeaderboards()
+    res.render('leaderboard', {data: result});
   }else{
     res.redirect('/login')
   }
