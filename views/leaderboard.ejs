@@ -1,0 +1,19 @@
+<html>
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <%- include('header') %>
+    <h1>leaderboard</h1>
+    <form method="post" action="/leaderboard">
+      <button type="submit">load data</button>
+    </form>
+    <% if(data != null) { %>
+      <ul>
+        <% for(var i = 0; i < data.length;i++){ %>
+          <li>
+            <%= data[i].username + " " + data[i].highscore%>
+          </li>
+        <% } %>
+      </ul>
+    <% } %>
+  </body>
+</html>
