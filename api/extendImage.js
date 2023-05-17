@@ -18,7 +18,7 @@ async function removeTempFile(filePath) {
 //prompt is the prompt to be used for the API
 async function callDalleAPI(shiftedImagePath, prompt) {
   const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "KEY HERE",
   });
   const openai = new OpenAIApi(configuration);
 
