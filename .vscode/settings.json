@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/cd8bc8b7-2f83-4bee-9664-3632216b3f72/resourceGroups/InfiniteJigsaw/providers/Microsoft.Web/sites/Engen241InfiniteJigsaw",
+    "appService.deploySubpath": "."
+}
