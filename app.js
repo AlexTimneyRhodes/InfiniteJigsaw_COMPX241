@@ -4,7 +4,7 @@ var path = require('path');
 const app = express();
 const util = require("util");
 var fs = require('fs'); 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //Register view engine
 app.set('view engine', 'ejs'); 
@@ -12,7 +12,6 @@ app.set('view engine', 'ejs');
 app.listen(port, ()=>{
     console.log(`Listening on port ${port}`)
 }); 
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -22,7 +21,6 @@ app.get('/', (req,res) => {
     res.render('index'); 
 
 });
-
 
 app.get('/about', (req,res) => {
     res.render('about'); 
