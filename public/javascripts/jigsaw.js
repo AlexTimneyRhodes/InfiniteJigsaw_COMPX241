@@ -4,31 +4,50 @@ import * as expandJigsaw from './jigsaw_expansion.js';
 let IMAGE=null;
 let CANVAS=null; 
 let CONTEXT=null; 
-let SCALER=1.2; 
+let PUZZLE_CONTAINER=null; 
+let ORIENTATION_SELECT=null; 
+let EXPAND_BUTTON=null;
+let COMPLETE_MENU_ITEMS=null; 
+let SCALER=0.4; 
 export let SIZE={x:0,y:0,width:0,height:0, rows:2, columns:2 };
 let NODE_PIECES = []; 
 let ORIGINAL_NODE_PIECES_ORDER = []; 
 let SELECTED_NODE=null;
 let CONNECTED_ARRAY = []; 
-let OFFSET = 1; 
-let BOTTOM_EXPANSION_COUNT = 1; 
+let OFFSET = []; 
+let LAST_EXPANSION = [];
+let COMPLETED_PUZZLE = false; 
+let EXPAND_ORIENTATION = "NULL"; 
+var EXPANSION_COUNT = 0; 
+
+
 
 
 document.addEventListener("DOMContentLoaded", function(){
+    COMPLETE_MENU_ITEMS = document.getElementById("finishPuzzleMenuItems");
+    // COMPLETE_MENU_ITEMS.style.display = "none";
+    
     CANVAS=document.getElementById("myCanvas"); //Gets the canvas element from the HTML document
+    PUZZLE_CONTAINER=document.getElementById("puzzleContainer");
     CONTEXT=CANVAS.getContext("2d"); //Gets the context to draw the images
     CONTEXT.lineWidth = 5; 
     CONTEXT.strokeStyle = "black"; 
 
-    CANVAS.width=window.innerWidth; //Sets the width and height of canvas to fit the screen
-    CANVAS.height=window.innerHeight; 
+    CANVAS.width=PUZZLE_CONTAINER.offsetWidth; //Sets the width and height of canvas to fit the screen
+    CANVAS.height=PUZZLE_CONTAINER.offsetHeight; 
 
     IMAGE = document.createElement("img");
     IMAGE.src = "./images/sherry-christian-8Myh76_3M2U-unsplash.jpg"; //Sources the image 
+
+    //Add the event listener for a completed puzzle 
+    ORIENTATION_SELECT = document.getElementById("orientation");
+    EXPAND_BUTTON = document.getElementById("expand_button");
+    addMenuEventListeners();
     
     //Sets up the drag and drop functions 
     addEventListeners(); 
-
+    OFFSET.push(1);
+    
     IMAGE.onload = function(){ //Once the image is loaded, resize the image and update the canvas 
         window.addEventListener("resize", handleResize);
         handleResize(SCALER); 
@@ -40,17 +59,37 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 
+function addMenuEventListeners(){
+    ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
+    EXPAND_BUTTON.addEventListener("click", expandCompletedPuzzle);
+}
 
 function addEventListeners(){
     CANVAS.addEventListener("mousedown", onMouseDown);
     CANVAS.addEventListener("mousemove", onMouseMove);
     CANVAS.addEventListener("mouseup", onMouseUp);
 
-
 }
 
+function removeEventListeners(){
+    CANVAS.removeEventListener("mousedown", onMouseDown);
+    CANVAS.removeEventListener("mousemove", onMouseMove);
+    CANVAS.removeEventListener("mouseup", onMouseUp);
+}
+
+
+
+
 function onMouseDown(evt){
-    SELECTED_NODE = getPressedPiece(evt); 
+
+    var rect = CANVAS.getBoundingClientRect(); 
+    var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
+    var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+
+    var mouseX = evt.clientX + scrollLeft; 
+    var mouseY = evt.clientY + scrollTop; 
+
+    SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
         //Make sure top most piece is always grabbed first
         const index = NODE_PIECES.indexOf(SELECTED_NODE);
@@ -60,8 +99,8 @@ function onMouseDown(evt){
         }
     
         SELECTED_NODE.offset={
-            x: evt.x-SELECTED_NODE.piece.x,
-            y:evt.y-SELECTED_NODE.piece.y
+            x: mouseX-SELECTED_NODE.piece.x,
+            y:mouseY-SELECTED_NODE.piece.y
         }
 
         SELECTED_NODE.updateEdgeValues(); 
@@ -72,6 +111,13 @@ function onMouseDown(evt){
 }
 
 function onMouseMove(evt){
+
+    var rect = CANVAS.getBoundingClientRect(); 
+    var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
+    var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+
+    var mouseX = evt.clientX + scrollLeft; 
+    var mouseY = evt.clientY + scrollTop; 
     
     if(SELECTED_NODE != null){
 
@@ -79,8 +125,8 @@ function onMouseMove(evt){
         let origin_x = SELECTED_NODE.piece.x; 
         let origin_y = SELECTED_NODE.piece.y; 
 
-        SELECTED_NODE.piece.x = evt.x - SELECTED_NODE.offset.x; 
-        SELECTED_NODE.piece.y = evt.y - SELECTED_NODE.offset.y; 
+        SELECTED_NODE.piece.x = mouseX - SELECTED_NODE.offset.x; 
+        SELECTED_NODE.piece.y = mouseY - SELECTED_NODE.offset.y; 
 
         //Calculate the delta x and y 
         const changeX = SELECTED_NODE.piece.x - origin_x; 
@@ -140,15 +186,16 @@ function onMouseUp(evt){
 
     if(SELECTED_NODE != null){
 
+        //Get the pieces connected to the selected piece (if any)            
+        CONNECTED_ARRAY = []; 
+        CONNECTED_ARRAY.length = 0; 
+        traverseNodes(SELECTED_NODE); 
+
         //Check if the bottom edge of a piece is close to the top edge of the selected node 
         if(SELECTED_NODE.isCloseToTopEdge() != null && SELECTED_NODE.topConnected == false){
 
             //Get the top piece 
             let topNode = SELECTED_NODE.isCloseToTopEdge(); 
-            
-            //Get the pieces connected to the selected piece (if any)
-            CONNECTED_ARRAY = []; 
-            traverseNodes(SELECTED_NODE); 
 
             //Set the top edge connected of the selected node to true and the bottom edge connected to true for he top node 
             SELECTED_NODE.topConnected = true; 
@@ -193,10 +240,6 @@ function onMouseUp(evt){
             //Get the bottom piece 
             let bottomNode = SELECTED_NODE.isCloseToBottomEdge(); 
 
-            //Get the pieces connected to the selected node (if any)
-            CONNECTED_ARRAY = []; 
-            traverseNodes(SELECTED_NODE); 
-
             //Set the bottom edge connected of the selected node to true and the top edge connected to true for the bottom node 
             SELECTED_NODE.bottomConnected = true; 
             bottomNode.topConnected = true; 
@@ -239,11 +282,6 @@ function onMouseUp(evt){
             //Get the left node 
             let leftNode = SELECTED_NODE.isCloseToLeftEdge();
 
-            //Get the pieces connected to the selected piece (if any)            
-            CONNECTED_ARRAY = []; 
-            CONNECTED_ARRAY.length = 0; 
-            traverseNodes(SELECTED_NODE); 
-
             //Set the left edge connected of the selected node to true and the right edge connected to true for the left node 
             SELECTED_NODE.leftConnected = true; 
             leftNode.rightConnected = true; 
@@ -285,11 +323,6 @@ function onMouseUp(evt){
             
             //Get the right node 
             let rightNode = SELECTED_NODE.isCloseToRightEdge(); 
-            
-            //Get the pieces connected to the selected piece (if any)                        
-            CONNECTED_ARRAY = []; 
-            CONNECTED_ARRAY.length = 0; 
-            traverseNodes(SELECTED_NODE); 
 
             //Set the right edge connected of the selected node to true and the left edge connected to true for the right node 
             SELECTED_NODE.rightConnected = true; 
@@ -330,17 +363,12 @@ function onMouseUp(evt){
         }
 
         //Expand the array if the connected array of the selected piece is has the total number of nodes in the puzzle 
-        if(CONNECTED_ARRAY.length == NODE_PIECES.length && NODE_PIECES.length == (SIZE.columns * SIZE.rows * BOTTOM_EXPANSION_COUNT)){
-            alert("Completed Puzzle - Puzzle will expand from the bottom edge"); 
-            //Increase the number of times the puzzle has been expanded from the bottom 
-            BOTTOM_EXPANSION_COUNT++; 
+        if(CONNECTED_ARRAY.length == NODE_PIECES.length /*&& NODE_PIECES.length == (SIZE.columns * SIZE.rows * RIGHT_EXPANSION_COUNT)*/){
             
-            //Create the image for the bottom image 
-            var image = document.createElement("img"); 
-            image.src = "./images/thomas-vimare-IZ01rjX0XQA-unsplash.jpg";
-            image.onload = function(){
-                expandJigsaw.createBottomPuzzle(image); 
-            }
+            COMPLETED_PUZZLE = true; 
+            COMPLETE_MENU_ITEMS.style.display = "block";
+
+            
         }
 
     }
@@ -355,14 +383,14 @@ function onMouseUp(evt){
  * @param {The location of the mouse cursor} loc 
  * @returns The node that has been selected or null
  */
-function getPressedPiece(loc){
+function getPressedPiece(mouseX, mouseY){
 
     for(let i=NODE_PIECES.length - 1; i >= 0; i--){
         NODE_PIECES[i].updateEdgeValues();
         //Check whether the mouse position is within the bounds of the puzzle piece 
-        if(loc.x > NODE_PIECES[i].leftEdge.value && loc.x < NODE_PIECES[i].rightEdge.value){
+        if(mouseX > NODE_PIECES[i].leftEdge.value && mouseX < NODE_PIECES[i].rightEdge.value){
 
-            if(loc.y > NODE_PIECES[i].topEdge.value && loc.y < NODE_PIECES[i].bottomEdge.value){
+            if(mouseY > NODE_PIECES[i].topEdge.value && mouseY < NODE_PIECES[i].bottomEdge.value){
                 return NODE_PIECES[i];
             }
         }
@@ -379,13 +407,28 @@ export function randomisePieces(startPiece){
    
     for(let i=startPiece; i< NODE_PIECES.length; i++){
         let local = {
-            x: Math.random() * (CANVAS.width - (NODE_PIECES[i].piece.width + NODE_PIECES[i].piece.width*0.1)) , 
-            y:Math.random() * (CANVAS.height - (NODE_PIECES[i].piece.height+ NODE_PIECES[i].piece.height*0.1))
+            x: Math.random() * (PUZZLE_CONTAINER.offsetWidth - (NODE_PIECES[i].piece.width + NODE_PIECES[i].piece.width*0.1)) , 
+            y:Math.random() * (PUZZLE_CONTAINER.offsetHeight - (NODE_PIECES[i].piece.height+ NODE_PIECES[i].piece.height*0.1))
         }; 
         NODE_PIECES[i].piece.x = local.x;
         NODE_PIECES[i].piece.y = local.y; 
         NODE_PIECES[i].updateEdgeValues(); 
     }
+}
+
+
+export function getCentreNodes(){
+
+    var centreNodes = [];
+    //Goes through the original node pieces array and then stores all the centre nodes in a new array, returning that array 
+    for(let i = 0; i < ORIGINAL_NODE_PIECES_ORDER.length;i++){
+        if(ORIGINAL_NODE_PIECES_ORDER[i].isCentreNode){
+            centreNodes.push(ORIGINAL_NODE_PIECES_ORDER[i]); 
+            ORIGINAL_NODE_PIECES_ORDER[i].isCentreNode = false; 
+        }
+    }
+
+    return centreNodes; 
 }
 
 
@@ -409,13 +452,13 @@ function updateCanvas(){
 export function handleResize(scaler){
         let resizer=scaler*
         Math.min(
-            window.innerWidth/IMAGE.width,
-            window.innerHeight/IMAGE.width
+            PUZZLE_CONTAINER.offsetWidth/IMAGE.width,
+            PUZZLE_CONTAINER.offsetHeight/IMAGE.width
         );
-    SIZE.width = resizer*IMAGE.width;
-    SIZE.height = resizer*IMAGE.height; 
-    SIZE.x=window.innerWidth/2-SIZE.width/2;
-    SIZE.y=window.innerHeight/2-(SIZE.height/6)*7;
+    SIZE.width = 0.1*IMAGE.width;
+    SIZE.height = 0.1*IMAGE.height; 
+    SIZE.x=PUZZLE_CONTAINER.offsetWidth/2-SIZE.width/2;
+    SIZE.y=PUZZLE_CONTAINER.offsetHeight/2-(SIZE.height/6)*7;
 
     if(NODE_PIECES.length > 0){
         updateCanvas();
@@ -443,6 +486,9 @@ function initialisePieces(rows, cols){
     NODE_PIECES=[];
     SIZE.rows = rows; 
     SIZE.columns = cols; 
+    var offset = OFFSET[0];
+    OFFSET = [];
+
     var id_T = 0; 
     var id_L = 0; 
     var id_R = 0; 
@@ -462,42 +508,44 @@ function initialisePieces(rows, cols){
                     
             }
             else if(col > 0 && row == 0){ //If the piece is in the first row but the second column, the left edge will have the same id as the previous node's right edge
-                id_T = index + OFFSET; 
+                id_T = index + offset; 
                 id_L = NODE_PIECES[index - 1].rightEdge.id;  
-                id_R = index + OFFSET + 1; 
-                id_B = index + OFFSET + 2; 
+                id_R = index + offset + 1; 
+                id_B = index + offset + 2; 
                     
             }
             else if(col == 0 & row > 0){ //If the piece is in the first column and not the first row, the top edge will have the same edge ID as the above node's bottom edge ID but unique left edge
                 id_T = NODE_PIECES[index - SIZE.columns].bottomEdge.id; 
-                id_L = index + OFFSET; 
-                id_R = index + OFFSET + 1; 
-                id_B = index + OFFSET + 2; 
+                id_L = index + offset; 
+                id_R = index + offset + 1; 
+                id_B = index + offset + 2; 
                     
             }
             else if(col > 0 && row > 0){ //If the piece is not in the first row or column, top edge will have same edge ID as above node's bottom node and left edge will have same edge ID as previous node's right edge
                 id_T = NODE_PIECES[index - SIZE.columns].bottomEdge.id; 
                 id_L = NODE_PIECES[index - 1].rightEdge.id;  
-                id_R = index + OFFSET; 
-                id_B = index + OFFSET + 1; 
+                id_R = index + offset; 
+                id_B = index + offset + 1; 
 
             }
 
             //Create the node and add it to the array of nodes 
             var node = new Node(piece, id_T, id_L, id_R, id_B, IMAGE);
+            node.isCentreNode = true; 
             NODE_PIECES.push(node); 
             //Increase the index of the piece by 1 and the offset by 2
             index++; 
-            OFFSET += 2; 
+            offset += 2; 
 
         }
     }
+
+    OFFSET.push(offset);
     //Store the original order of the nodes in another array 
     for(let i = 0; i < NODE_PIECES.length; i++){
         ORIGINAL_NODE_PIECES_ORDER.push(NODE_PIECES[i]); 
     }
     
-
 }
 
 
@@ -514,10 +562,10 @@ export function puzzleExpansionInformation(){
         SIZE, 
         OFFSET, 
         SCALER, 
-        BOTTOM_EXPANSION_COUNT
-        
+        EXPANSION_COUNT,
+        LAST_EXPANSION,
+        EXPAND_ORIENTATION
     }
-
     
 }
 
@@ -570,6 +618,9 @@ export class Node{
         this.bottomPiece = null; 
         this.rightPiece = null; 
         this.leftPiece = null; 
+
+        //Checks if the nodes are the centre nodes 
+        this.isCentreNode = false; 
     }    
 
     /**
@@ -700,16 +751,6 @@ export class Node{
 
     }
 
-    //Gets the piece given the row and column 
-    getPiece(row, col){
-
-        if(this.piece.rowIndex == row && this.piece.colIndex == col){
-            return this; 
-        }else{
-            return null; 
-        }
-    }
-
 }
 
 /**
@@ -726,3 +767,100 @@ class Edge{
 
 }
 
+function checkExpansionValidity(){
+    //Get the value from the select element
+    let orientation = document.getElementById("orientation").value; 
+    switch(orientation){
+        case "LEFT":
+            if(EXPANSION_COUNT == 0 || LAST_EXPANSION[0] != "RIGHT"){
+                //Set the next expansion orientation 
+                EXPAND_ORIENTATION = "LEFT"; 
+            }else{
+                alert("Your last expansion was from the right edge. Puzzle cannot be expanded from the left edge as it is joined to other pieces");
+                EXPAND_ORIENTATION = "NULL";
+            };
+            break; 
+        case "RIGHT":
+            if(EXPANSION_COUNT == 0 || LAST_EXPANSION[0] != "LEFT"){
+                //Set the next expansion orientation 
+                EXPAND_ORIENTATION = "RIGHT"; 
+            }else{
+                alert("Your last expansion was from the left edge. Puzzle cannot be expanded from the right edge as it is joined to other pieces");
+                EXPAND_ORIENTATION = "NULL";
+            };
+            break; 
+
+        case "BOTTOM":
+            if(EXPANSION_COUNT == 0 || LAST_EXPANSION[0] != "TOP"){
+                //Set the next expansion orientation 
+                EXPAND_ORIENTATION = "BOTTOM"; 
+            }else{
+                alert("Your last expansion was from the top edge. Puzzle cannot be expanded from the bottom edge as it is joined to other pieces");
+                EXPAND_ORIENTATION = "NULL";
+            };
+            break; 
+
+        case "TOP":
+            if(EXPANSION_COUNT == 0 || LAST_EXPANSION[0] != "BOTTOM"){
+                //Set the next expansion orientation 
+                EXPAND_ORIENTATION = "TOP"; 
+            }else{
+                alert("Your last expansion was from the bottom edge. Puzzle cannot be expanded from the top edge as it is joined to other pieces");
+                EXPAND_ORIENTATION = "NULL";
+            };
+            break; 
+    }
+
+}
+
+function expandCompletedPuzzle(){
+
+    if(COMPLETED_PUZZLE == false){
+        alert("Puzzle must be completed before expansion"); 
+    }else{
+
+        //Get the value of the expansion orientation 
+        if(EXPAND_ORIENTATION != "NULL"){
+
+            alert("Completed Puzzle - puzzle will expand from the " + EXPAND_ORIENTATION + " edge");
+
+            if(EXPAND_ORIENTATION == "TOP"){
+                CANVAS.height *= 1.5; 
+                for(let i = 0; i < NODE_PIECES.length; i++){
+                    //Increase the y position of each piece by 2
+                    NODE_PIECES[i].piece.y += 400;
+                    NODE_PIECES[i].updateEdgeValues(); 
+    
+                }
+            }
+
+            //Store the orientation 
+            var orientation = EXPAND_ORIENTATION; 
+            var image = document.createElement("img");
+            image.src = "./images/sherry-christian-8Myh76_3M2U-unsplash.jpg";
+            image.onload = function(){
+                expandJigsaw.expandPuzzle(image, orientation); 
+            }
+            LAST_EXPANSION.length = 0; 
+            LAST_EXPANSION.push(orientation); 
+            EXPAND_ORIENTATION = "NULL"; 
+            EXPANSION_COUNT++; 
+            COMPLETE_MENU_ITEMS.style.display = "none";
+
+
+
+        }else{
+            //Alert the user to choose a valid expansion orienation 
+            alert("The orientation has not been selected. Please select a valid orientation"); 
+            return; 
+        }
+
+        COMPLETED_PUZZLE = false; 
+        updateCanvas();
+
+
+    }
+
+
+
+}

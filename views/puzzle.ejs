@@ -3,9 +3,24 @@
   <body>
     <%- include('header') %>
 
-    <div id ="canvasdiv" style ="width:100; height:100; overflow:scroll">
+    <div id="finishPuzzleMenuItems" >
+      <div id = "controls" >
+        Orientation <select id="orientation">
+            <option value="LEFT">Left</option>
+            <option value="RIGHT">Right</option>
+            <option value="TOP">Top</option>
+            <option value="BOTTOM">Bottom</option>
+        </select>
+        <button id = "expand_button">Expand</button>
+
+      </div>
+    </div>
+
+    <div id ="puzzleContainer">
       <canvas id="myCanvas"></canvas>
     </div>
 
+    <script type = "module" src="/javascripts/jigsaw.js"></script>
+    <script type = "module" src="/javascripts/jigsaw_expansion.js"></script>
   </body>
 </html>
