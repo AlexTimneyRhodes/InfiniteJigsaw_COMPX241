@@ -1,0 +1,36 @@
+<html>
+  <%- include('./partials/head.ejs') %>
+  <head>
+    <link href="/stylesheets/form.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <%- include('header') %>
+    <!-- <h1>register</h1>
+    <form method="post" action="/register">
+      <input type="text" placeholder="username" name="username"></input>
+      <input type="text" placeholder="password" name="password"></input>
+      <button type="submit">submit</button>
+      <a href="/login">login</href>
+    </form> -->
+
+    <div class="formbg">
+      <div class="formbg-inner padding-horizontal--48">
+        <span class="padding-bottom--15">Create new account</span>
+        <form method="post" action="/register">
+          <div class="field padding-bottom--24">
+            <label for="username">Username</label>
+            <input type="username" name="username">
+          </div>
+          <div class="field padding-bottom--24">
+            <label for="password">Password</label>
+            <input type="password" name="password">
+          </div>
+          <div class="field padding-bottom--24">
+            <input type="submit" name="submit" value="Register">
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+
+</html>

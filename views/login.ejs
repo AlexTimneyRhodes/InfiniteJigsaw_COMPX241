@@ -1,0 +1,35 @@
+<html>
+  <%- include('./partials/head.ejs') %>
+  <head>
+    <link href="/stylesheets/form.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <%- include('header') %>
+    <!-- <form method="post" action="/login">
+      <input type="text" placeholder="username" name="username"></input>
+      <input type="text" placeholder="password" name="password"></input>
+      <button type="submit">submit</button>
+      <a href="/register">register</href>
+    </form> -->
+
+    <div class="formbg">
+      <div class="formbg-inner padding-horizontal--48">
+        <span class="padding-bottom--15">Sign in to your account</span>
+        <form method="post" action="/login">
+          <div class="field padding-bottom--24">
+            <label for="username">Username</label>
+            <input type="username" name="username">
+          </div>
+          <div class="field padding-bottom--24">
+            <label for="password">Password</label>
+            <input type="password" name="password">
+          </div>
+          <div class="field padding-bottom--24">
+            <input type="submit" name="submit" value="Continue">
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </body>
+</html>
