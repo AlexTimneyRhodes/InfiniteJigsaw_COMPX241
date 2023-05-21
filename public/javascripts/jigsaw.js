@@ -8,8 +8,8 @@ let PUZZLE_CONTAINER=null;
 let ORIENTATION_SELECT=null; 
 let EXPAND_BUTTON=null;
 let COMPLETE_MENU_ITEMS=null; 
-let SCALER=0.4; 
-export let SIZE={x:0,y:0,width:0,height:0, rows:2, columns:2 };
+let SCALER=0.6; 
+export let SIZE={x:0,y:0,width:0,height:0, rows:4, columns:4};
 let NODE_PIECES = []; 
 let ORIGINAL_NODE_PIECES_ORDER = []; 
 let SELECTED_NODE=null;
@@ -37,10 +37,10 @@ document.addEventListener("DOMContentLoaded", function(){
     CANVAS.height=PUZZLE_CONTAINER.offsetHeight; 
 
     IMAGE = document.createElement("img");
-    IMAGE.src = "./images/sherry-christian-8Myh76_3M2U-unsplash.jpg"; //Sources the image 
+    IMAGE.src = "./images/starryNight.jpg"; //Sources the image 
 
     //Add the event listener for a completed puzzle 
-    ORIENTATION_SELECT = document.getElementById("orientation");
+    ORIENTATION_SELECT = document.getElementsByClassName("orientation").item(0);
     EXPAND_BUTTON = document.getElementById("expand_button");
     addMenuEventListeners();
     
@@ -68,6 +68,8 @@ function addEventListeners(){
     CANVAS.addEventListener("mousedown", onMouseDown);
     CANVAS.addEventListener("mousemove", onMouseMove);
     CANVAS.addEventListener("mouseup", onMouseUp);
+    // PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
+
 
 }
 
@@ -75,6 +77,7 @@ function removeEventListeners(){
     CANVAS.removeEventListener("mousedown", onMouseDown);
     CANVAS.removeEventListener("mousemove", onMouseMove);
     CANVAS.removeEventListener("mouseup", onMouseUp);
+    //PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
 }
 
 
@@ -82,15 +85,16 @@ function removeEventListeners(){
 
 function onMouseDown(evt){
 
-    var rect = CANVAS.getBoundingClientRect(); 
+    var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
     var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 
-    var mouseX = evt.clientX + scrollLeft; 
-    var mouseY = evt.clientY + scrollTop; 
+    var mouseX = evt.clientX - rect.x + scrollLeft; 
+    var mouseY = evt.clientY - rect.y + scrollTop; 
 
     SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
+        PUZZLE_CONTAINER.style.cursor = 'pointer'; 
         //Make sure top most piece is always grabbed first
         const index = NODE_PIECES.indexOf(SELECTED_NODE);
         if(index > -1){ //Check the piece is in the array 
@@ -112,12 +116,20 @@ function onMouseDown(evt){
 
 function onMouseMove(evt){
 
-    var rect = CANVAS.getBoundingClientRect(); 
+
+    var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
     var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 
-    var mouseX = evt.clientX + scrollLeft; 
-    var mouseY = evt.clientY + scrollTop; 
+    var mouseX = evt.clientX - rect.x + scrollLeft; 
+    var mouseY = evt.clientY - rect.y + scrollTop; 
+
+    if(getPressedPiece(mouseX,mouseY) != null){
+        PUZZLE_CONTAINER.style.cursor = 'pointer'; 
+    }
+    else{
+        PUZZLE_CONTAINER.style.cursor = 'default'; 
+    }
     
     if(SELECTED_NODE != null){
 
@@ -367,6 +379,10 @@ function onMouseUp(evt){
             
             COMPLETED_PUZZLE = true; 
             COMPLETE_MENU_ITEMS.style.display = "block";
+            var textBox = document.getElementById("textPrompt");
+            textBox.value = "";
+            ORIENTATION_SELECT.selectedIndex = 0; 
+            removeEventListeners(); 
 
             
         }
@@ -374,6 +390,7 @@ function onMouseUp(evt){
     }
     //Unselect the node and update canvas to reflect change
     SELECTED_NODE = null; 
+    PUZZLE_CONTAINER.style.cursor = 'default'; 
     updateCanvas(); 
     
 }
@@ -452,13 +469,13 @@ function updateCanvas(){
 export function handleResize(scaler){
         let resizer=scaler*
         Math.min(
-            PUZZLE_CONTAINER.offsetWidth/IMAGE.width,
-            PUZZLE_CONTAINER.offsetHeight/IMAGE.width
+            window.innerWidth/IMAGE.width,
+            window.innerHeight/IMAGE.width
         );
-    SIZE.width = 0.1*IMAGE.width;
-    SIZE.height = 0.1*IMAGE.height; 
-    SIZE.x=PUZZLE_CONTAINER.offsetWidth/2-SIZE.width/2;
-    SIZE.y=PUZZLE_CONTAINER.offsetHeight/2-(SIZE.height/6)*7;
+    SIZE.width = resizer*IMAGE.width;
+    SIZE.height = resizer*IMAGE.height; 
+    SIZE.x=window.innerWidth/2-SIZE.width/2;
+    SIZE.y=window.innerHeight/2-(SIZE.height/6)*7;
 
     if(NODE_PIECES.length > 0){
         updateCanvas();
@@ -769,7 +786,7 @@ class Edge{
 
 function checkExpansionValidity(){
     //Get the value from the select element
-    let orientation = document.getElementById("orientation").value; 
+    let orientation = ORIENTATION_SELECT.value; 
     switch(orientation){
         case "LEFT":
             if(EXPANSION_COUNT == 0 || LAST_EXPANSION[0] != "RIGHT"){
@@ -825,19 +842,23 @@ function expandCompletedPuzzle(){
             alert("Completed Puzzle - puzzle will expand from the " + EXPAND_ORIENTATION + " edge");
 
             if(EXPAND_ORIENTATION == "TOP"){
+
                 CANVAS.height *= 1.5; 
+               
                 for(let i = 0; i < NODE_PIECES.length; i++){
                     //Increase the y position of each piece by 2
-                    NODE_PIECES[i].piece.y += 400;
+                    NODE_PIECES[i].piece.y += 300;
                     NODE_PIECES[i].updateEdgeValues(); 
     
                 }
+            
+
             }
 
             //Store the orientation 
             var orientation = EXPAND_ORIENTATION; 
             var image = document.createElement("img");
-            image.src = "./images/sherry-christian-8Myh76_3M2U-unsplash.jpg";
+            image.src = "./images/VanGogh.jpg";
             image.onload = function(){
                 expandJigsaw.expandPuzzle(image, orientation); 
             }
@@ -851,11 +872,12 @@ function expandCompletedPuzzle(){
 
         }else{
             //Alert the user to choose a valid expansion orienation 
-            alert("The orientation has not been selected. Please select a valid orientation"); 
+            alert("A valid edge has not been selected. Please select a valid edge"); 
             return; 
         }
 
         COMPLETED_PUZZLE = false; 
+        addEventListeners()
         updateCanvas();
 
 
