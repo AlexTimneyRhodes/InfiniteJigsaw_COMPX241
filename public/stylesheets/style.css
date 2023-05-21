@@ -4,22 +4,143 @@ body{
 }
 
 #myCanvas{
+    /* position: absolute;
+    left:0;
+    top:0;   */
     display: block; 
+    /* width: 100%; */
 }
 
 div#puzzleContainer{
-  
+    border:#111; 
     height:100vh;
     width:100vw;
-    overflow: auto;    
+    overflow: auto;
+    cursor: default;
+    
 }
 
 #finishPuzzleMenuItems{
-    position: absolute; 
-    top: 10%;
+    position: absolute;
+    width: 400px;
+    height:450px; 
+    top: 50%;
     left: 50%;
-    text-align: center;
+    transform:translate(-50%, -50%);
+    background-color: rgba(51, 51, 51, 0.8);
     vertical-align: middle;
+    border: rgba(0, 0, 0, 0.6) solid;
+    border-width: 10px;
+    border-radius: 2dvh;
+    display: none;
+    
+}
+
+#finishPuzzleMenuItems h2{
+
+    text-align: center;
+    color:white; 
+    font-family: 'Century Gothic', sans-serif;
+    font-weight: 550;
+
+
+}
+
+#finishPuzzleMenuItems p{
+
+    text-align: center;
+    color:white; 
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+    padding-left: 1dvw;
+    padding-right: 1dvw;
+
+
+}
+
+
+#finishPuzzleMenuItems hr{
+    width: 300px;
+}
+
+.userInput, .controls{
+    margin-top: 10%;
+    margin-left: 50%;
+    transform: translate(-50%, -10%);
+    height: auto;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+
+}
+
+.controls button{
+    padding: 8px 32px; 
+    color: #333333;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold ;
+    box-shadow: 2px 2px 5px black;
+    cursor: pointer;
+
+}
+
+.controls button:hover{  
+    background-color: lightslategray;
+    color: white;
+    border: 1px solid #dddddd;
+}
+
+
+
+#labelOrient, #labelPrompt{
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
+    font-weight: 500;
+    color: white;
+    text-align: right;
+    padding-right: 10px;
+
+}
+
+#textPrompt{
+
+    padding-top: 8px; 
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right:30px;
+    color: #333333;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: light ;
+    box-shadow: 2px 2px 5px rgb(90, 90, 90);
+
+}
+
+.orientation{
+    padding: 8px 12px; 
+    color: #333333;
+    background-color: #eeeeee;
+    border: 3px solid rgba(117, 117, 117, 0.486);
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
+    
+
+}
+
+
+select option:first-of-type{
     display: none;
 }
 
@@ -48,7 +169,7 @@ div#puzzleContainer{
 }
 
 #header li a {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
     text-decoration: none;
     font-style: normal;
     display: block;
