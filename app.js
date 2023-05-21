@@ -3,7 +3,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const port = 3030;
+const port = process.env.PORT || 3030;
 
 // Loading databse
 const db = require('./db');
