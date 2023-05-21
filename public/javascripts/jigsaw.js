@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function(){
     CANVAS.height=PUZZLE_CONTAINER.offsetHeight; 
 
     IMAGE = document.createElement("img");
-    IMAGE.src = "./images/sherry-christian-8Myh76_3M2U-unsplash.jpg"; //Sources the image 
+    IMAGE.src = "./images/lake.png"; //Sources the image 
 
     //Add the event listener for a completed puzzle 
     ORIENTATION_SELECT = document.getElementById("orientation");
