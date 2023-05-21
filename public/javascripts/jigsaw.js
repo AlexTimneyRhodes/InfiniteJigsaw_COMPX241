@@ -235,7 +235,7 @@ function onMouseUp(evt){
         }
 
         //Check if the top edge of a piece is close to the bottom edge of the selected node 
-        if(SELECTED_NODE.isCloseToBottomEdge() != null && SELECTED_NODE.bottomConnected == false){
+        else if(SELECTED_NODE.isCloseToBottomEdge() != null && SELECTED_NODE.bottomConnected == false){
 
             //Get the bottom piece 
             let bottomNode = SELECTED_NODE.isCloseToBottomEdge(); 
@@ -277,7 +277,7 @@ function onMouseUp(evt){
         }
 
         //Check if the right edge of a piece is close to the left edge of the selected node 
-        if(SELECTED_NODE.isCloseToLeftEdge() != null && SELECTED_NODE.leftConnected == false){
+        else if(SELECTED_NODE.isCloseToLeftEdge() != null && SELECTED_NODE.leftConnected == false){
 
             //Get the left node 
             let leftNode = SELECTED_NODE.isCloseToLeftEdge();
@@ -319,7 +319,7 @@ function onMouseUp(evt){
         }
 
         //Check if the left edge of a piece is close to the right edge of the selected node 
-        if(SELECTED_NODE.isCloseToRightEdge() != null && SELECTED_NODE.rightConnected == false){
+        else if(SELECTED_NODE.isCloseToRightEdge() != null && SELECTED_NODE.rightConnected == false){
             
             //Get the right node 
             let rightNode = SELECTED_NODE.isCloseToRightEdge(); 
