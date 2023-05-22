@@ -32,7 +32,7 @@ div#puzzleContainer{
     border: rgba(0, 0, 0, 0.6) solid;
     border-width: 10px;
     border-radius: 2dvh;
-    display: none;
+    display:none;
     
 }
 
@@ -75,8 +75,9 @@ div#puzzleContainer{
 
 }
 
-.controls button{
-    padding: 8px 32px; 
+.controls #expand_button{
+    padding: 8px 32px;
+    margin-right: 7px; 
     color: #333333;
     background-color: #eeeeee;
     border: 1px solid #dddddd;
@@ -89,7 +90,22 @@ div#puzzleContainer{
 
 }
 
-.controls button:hover{  
+.controls #end_session{
+    padding: 8px 32px;
+    margin-left: 7px; 
+    color: #333333;
+    background-color: #eb9090;
+    border: 1px solid #7e1111;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold ;
+    box-shadow: 2px 2px 5px black;
+    cursor: pointer;
+
+}
+
+.controls  #end_session:hover, #expand_button:hover{  
     background-color: lightslategray;
     color: white;
     border: 1px solid #dddddd;
