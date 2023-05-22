@@ -106,7 +106,7 @@ app.post('/api/extendImage', async (req, res) => {
 // Starting express server
 try {
     app.listen(port);
-    console.log("Listening on port: " + {port});
+    console.log("Listening on port: " + port);
 }
 catch(e) {
     console.log("Error: could not start server");

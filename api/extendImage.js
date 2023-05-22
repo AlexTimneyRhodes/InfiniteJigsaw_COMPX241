@@ -12,7 +12,7 @@ const fetch = require("node-fetch");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const FormData = require("form-data");
-const BASEURL = "http://localhost:3030/";
+const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
 
 async function removeTempFile(filePath) {
   try {
@@ -55,7 +55,7 @@ async function callDalleAPI(shiftedImagePath, prompt) {
   //write the json response to a file
 
   const path = `public/gen/temp-${uuidv4()}`;
-  //const jsonPath = path + `.json`;
+  const jsonPath = path + `.json`;
   //fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
 
   //returns the relative path to the image that is to be extended
