@@ -21,8 +21,6 @@ let EXPAND_ORIENTATION = "NULL";
 var EXPANSION_COUNT = 0; 
 
 
-
-
 document.addEventListener("DOMContentLoaded", function(){
     COMPLETE_MENU_ITEMS = document.getElementById("finishPuzzleMenuItems");
     // COMPLETE_MENU_ITEMS.style.display = "none";
@@ -68,8 +66,6 @@ function addEventListeners(){
     CANVAS.addEventListener("mousedown", onMouseDown);
     CANVAS.addEventListener("mousemove", onMouseMove);
     CANVAS.addEventListener("mouseup", onMouseUp);
-    // PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
-
 
 }
 
@@ -77,10 +73,7 @@ function removeEventListeners(){
     CANVAS.removeEventListener("mousedown", onMouseDown);
     CANVAS.removeEventListener("mousemove", onMouseMove);
     CANVAS.removeEventListener("mouseup", onMouseUp);
-    //PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
 }
-
-
 
 
 function onMouseDown(evt){
@@ -94,7 +87,7 @@ function onMouseDown(evt){
 
     SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
-        PUZZLE_CONTAINER.style.cursor = 'pointer'; 
+        PUZZLE_CONTAINER.style.cursor = 'grabbing'; 
         //Make sure top most piece is always grabbed first
         const index = NODE_PIECES.indexOf(SELECTED_NODE);
         if(index > -1){ //Check the piece is in the array 
@@ -125,14 +118,14 @@ function onMouseMove(evt){
     var mouseY = evt.clientY - rect.y + scrollTop; 
 
     if(getPressedPiece(mouseX,mouseY) != null){
-        PUZZLE_CONTAINER.style.cursor = 'pointer'; 
+        PUZZLE_CONTAINER.style.cursor = 'grab'; 
     }
     else{
         PUZZLE_CONTAINER.style.cursor = 'default'; 
     }
     
     if(SELECTED_NODE != null){
-
+        PUZZLE_CONTAINER.style.cursor = 'grabbing'; 
         //Get the original location 
         let origin_x = SELECTED_NODE.piece.x; 
         let origin_y = SELECTED_NODE.piece.y; 
@@ -159,11 +152,8 @@ function onMouseMove(evt){
         for(let i = 0; i< NODE_PIECES.length; i++){
             NODE_PIECES[i].updateEdgeValues(); 
         }
-
-        
     }
     updateCanvas();
-
 }
 
 //Get array of connected pieces 
@@ -390,7 +380,12 @@ function onMouseUp(evt){
     }
     //Unselect the node and update canvas to reflect change
     SELECTED_NODE = null; 
-    PUZZLE_CONTAINER.style.cursor = 'default'; 
+    if(getPressedPiece(mouseX,mouseY) != null){
+        PUZZLE_CONTAINER.style.cursor = 'grab'; 
+    }
+    else{
+        PUZZLE_CONTAINER.style.cursor = 'default'; 
+    }    
     updateCanvas(); 
     
 }
@@ -689,7 +684,7 @@ export class Node{
                 }
                 //Check if the distance between the bottom and top edge is less than an eighth of the piece height
                 let distance = this.topEdge.value - NODE_PIECES[i].bottomEdge.value; 
-                if(distance < this.piece.height/8 && distance > 0){
+                if(distance < this.piece.height/6 && distance > -(this.piece.height/6)){
                     //Return the bottom piece 
                     return NODE_PIECES[i]; 
                 }
@@ -710,7 +705,7 @@ export class Node{
                 }
                 //Check if the distance between the bottom and top edge is less than an eighth of the piece height
                 let distance = NODE_PIECES[i].topEdge.value - this.bottomEdge.value; 
-                if(distance < this.piece.height/8 && distance > 0){
+                if(distance < this.piece.height/6 && distance > -(this.piece.height/6)){
                     //Return the bottom piece 
                     return NODE_PIECES[i]; 
                 }
@@ -733,7 +728,7 @@ export class Node{
                 }
                 //Check if the distance between the bottom and top edge is less than an eighth of the piece height
                 let distance = this.leftEdge.value - NODE_PIECES[i].rightEdge.value; 
-                if(distance < this.piece.width/8 && distance > 0){
+                if(distance < this.piece.width/6 && distance > -(this.piece.width/6)){
                     //Return the bottom piece 
                     return NODE_PIECES[i]; 
                 }
@@ -757,7 +752,7 @@ export class Node{
                 }
                 //Check if the distance between the bottom and top edge is less than an eighth of the piece height
                 let distance = NODE_PIECES[i].leftEdge.value - this.rightEdge.value; 
-                if(distance < this.piece.width/8 && distance > 0){
+                if(distance < this.piece.width/6 && distance > -(this.piece.width/6)){
                     //Return the bottom piece 
                     return NODE_PIECES[i]; 
                 }
