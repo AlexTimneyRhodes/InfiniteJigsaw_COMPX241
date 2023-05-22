@@ -82,12 +82,12 @@ function removeEventListeners(){
 
 function onMouseDown(evt){
 
-    var rect = CANVAS.getBoundingClientRect(); 
+    var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
     var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 
-    var mouseX = evt.clientX + scrollLeft; 
-    var mouseY = evt.clientY + scrollTop; 
+    var mouseX = evt.clientX - rect.x + scrollLeft; 
+    var mouseY = evt.clientY - rect.y + scrollTop; 
 
     SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
@@ -112,12 +112,12 @@ function onMouseDown(evt){
 
 function onMouseMove(evt){
 
-    var rect = CANVAS.getBoundingClientRect(); 
+    var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
     var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 
-    var mouseX = evt.clientX + scrollLeft; 
-    var mouseY = evt.clientY + scrollTop; 
+    var mouseX = evt.clientX - rect.x + scrollLeft; 
+    var mouseY = evt.clientY - rect.y + scrollTop; 
     
     if(SELECTED_NODE != null){
 
@@ -452,13 +452,13 @@ function updateCanvas(){
 export function handleResize(scaler){
         let resizer=scaler*
         Math.min(
-            PUZZLE_CONTAINER.offsetWidth/IMAGE.width,
-            PUZZLE_CONTAINER.offsetHeight/IMAGE.width
+            window.innerWidth/IMAGE.width,
+            window.innerHeight/IMAGE.width
         );
-    SIZE.width = 0.1*IMAGE.width;
-    SIZE.height = 0.1*IMAGE.height; 
-    SIZE.x=PUZZLE_CONTAINER.offsetWidth/2-SIZE.width/2;
-    SIZE.y=PUZZLE_CONTAINER.offsetHeight/2-(SIZE.height/6)*7;
+    SIZE.width = resizer*IMAGE.width;
+    SIZE.height = resizer*IMAGE.height; 
+    SIZE.x=window.innerWidth/2-SIZE.width/2;
+    SIZE.y=window.innerHeight/2-(SIZE.height/6)*7;
 
     if(NODE_PIECES.length > 0){
         updateCanvas();
@@ -837,7 +837,7 @@ function expandCompletedPuzzle(){
             //Store the orientation 
             var orientation = EXPAND_ORIENTATION; 
             var image = document.createElement("img");
-            image.src = "./images/sherry-christian-8Myh76_3M2U-unsplash.jpg";
+            image.src = "/images/Lake.png";
             image.onload = function(){
                 expandJigsaw.expandPuzzle(image, orientation); 
             }

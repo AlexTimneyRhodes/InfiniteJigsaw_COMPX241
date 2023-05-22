@@ -5,13 +5,19 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const port = process.env.PORT || 3030;
 
+// Importing API's
+const extendImage = require('./api/extendImage');
+
 // Loading databse
 const db = require('./db');
 const app = express();
 
+
+
 // Express settings
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+app.use(express.json());
 
 // Setting up sessions
 app.use(cookieParser());
@@ -88,6 +94,14 @@ app.post('/leaderboard', async (req, res) => {
     const result = await db.loadLeaderboards()
     res.render('leaderboard', {data: result});
 });
+
+// setting up image extension
+app.post('/api/extendImage', async (req, res) => {
+  const { imagePath, prompt, direction } = req.body;
+  const extendedImagePath = await extendImage(imagePath, prompt, direction);
+  res.json({ imagePath: extendedImagePath });
+});
+
 
 // Starting express server
 try {

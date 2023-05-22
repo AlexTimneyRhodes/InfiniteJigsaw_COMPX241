@@ -22,8 +22,37 @@ export function expandPuzzle(img, orientation){
     //Reset the offset array 
     originalPuzzle.OFFSET.length = 0;  
 
-    //Get the image to be used in the expanded puzzle 
-    var image = img; 
+    let image;
+    const data = {
+        imagePath: img.src,
+        prompt: 'your_prompt',
+        direction: orientation
+      };
+      
+      fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data)
+        image = data.imagePath; // store the data into the image variable
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+      
+        
+
+
+
+
+
+
 
     //Check the orientation that the use asked for and expand accordingly 
     if(orientation == "LEFT"){
