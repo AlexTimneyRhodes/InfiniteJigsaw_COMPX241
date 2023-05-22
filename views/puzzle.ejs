@@ -4,16 +4,33 @@
     <%- include('header') %>
 
     <div id="finishPuzzleMenuItems" >
-      <div id = "controls" >
-        Orientation <select id="orientation">
-            <option value="LEFT">Left</option>
-            <option value="RIGHT">Right</option>
-            <option value="TOP">Top</option>
-            <option value="BOTTOM">Bottom</option>
-        </select>
-        <button id = "expand_button">Expand</button>
+      <h2>INFINITE JIGSAW EXPANSION</h2>
+      <hr>
+      <p>
+        You have completed the puzzle! To expand your puzzle, enter a prompt and select the <b>edge</b> that you want to expand your puzzle from. 
 
-      </div>
+      </p>
+      <hr>
+      <div class = "userInput">
+        <label id="labelPrompt" for="textPrompt">Prompt: </label>
+        <input type="text" id="textPrompt" placeholder="Enter prompt here...">
+            <div class = "controls" >
+              <label id="labelOrient" for="orientation">Edge: </label>
+              <select class="orientation">
+                  <option value="NULL">Select edge...</option>
+                  <option value="LEFT">Left</option>
+                  <option value="RIGHT">Right</option>
+                  <option value="TOP">Top</option>
+                  <option value="BOTTOM">Bottom</option>
+              </select>
+              <br>
+              <br>
+              <hr>
+              <br>
+              <button id = "expand_button">Expand</button>
+              <button id="end_session"  onclick="window.location.href='/leaderboard';">End Session</button>
+            </div>
+        </div>
     </div>
 
     <div id ="puzzleContainer">
