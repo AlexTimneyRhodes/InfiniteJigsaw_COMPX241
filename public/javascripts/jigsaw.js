@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function(){
     CANVAS.height=PUZZLE_CONTAINER.offsetHeight; 
 
     IMAGE = document.createElement("img");
-    IMAGE.src = "./images/starryNight.jpg"; //Sources the image 
+    IMAGE.src = "./images/starryNight.png"; //Sources the image 
 
     //Add the event listener for a completed puzzle 
     ORIENTATION_SELECT = document.getElementsByClassName("orientation").item(0);
