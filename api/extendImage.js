@@ -94,11 +94,11 @@ async function shiftImage(imagePath, direction) {
         extractParams = { left: 0, top: 0, width: 512, height: 1024 };
         extendParams = { top: 0, bottom: 0, left: 512, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } };
         break;
-      case "TOP":
+      case "BOTTOM":
         extractParams = { left: 0, top: 512, width: 1024, height: 512 };
         extendParams = { top: 0, bottom: 512, left: 0, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } };
         break;
-      case "BOTTOM":
+      case "TOP":
         extractParams = { left: 0, top: 0, width: 1024, height: 512 };
         extendParams = { top: 512, bottom: 0, left: 0, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } };
         break;
