@@ -9,7 +9,7 @@ let ORIENTATION_SELECT=null;
 let EXPAND_BUTTON=null;
 let COMPLETE_MENU_ITEMS=null; 
 let SCALER=0.6; 
-export let SIZE={x:0,y:0,width:0,height:0, rows:4, columns:4};
+export let SIZE={x:0,y:0,width:0,height:0, rows:3, columns:3};
 let NODE_PIECES = []; 
 let ORIGINAL_NODE_PIECES_ORDER = []; 
 let SELECTED_NODE=null;
@@ -19,6 +19,8 @@ let LAST_EXPANSION = [];
 let COMPLETED_PUZZLE = false; 
 let EXPAND_ORIENTATION = "NULL"; 
 var EXPANSION_COUNT = 0; 
+
+
 
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -66,6 +68,8 @@ function addEventListeners(){
     CANVAS.addEventListener("mousedown", onMouseDown);
     CANVAS.addEventListener("mousemove", onMouseMove);
     CANVAS.addEventListener("mouseup", onMouseUp);
+    // PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
+
 
 }
 
@@ -73,10 +77,16 @@ function removeEventListeners(){
     CANVAS.removeEventListener("mousedown", onMouseDown);
     CANVAS.removeEventListener("mousemove", onMouseMove);
     CANVAS.removeEventListener("mouseup", onMouseUp);
+    //PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
 }
 
 
-function onMouseDown(evt){
+/**
+ * Calculates the proper mouse position in respect to the scroll of the window and the size of the puzzle container 
+ * @param {The mouse down, up or move event} evt 
+ * @returns 
+ */
+function calculateMousePosition(evt){
 
     var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
@@ -84,6 +94,17 @@ function onMouseDown(evt){
 
     var mouseX = evt.clientX - rect.x + scrollLeft; 
     var mouseY = evt.clientY - rect.y + scrollTop; 
+
+    return {
+        mouseX, mouseY
+    };
+
+}
+
+function onMouseDown(evt){
+
+    var mouseX = calculateMousePosition(evt).mouseX; 
+    var mouseY = calculateMousePosition(evt).mouseY; 
 
     SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
@@ -109,13 +130,8 @@ function onMouseDown(evt){
 
 function onMouseMove(evt){
 
-
-    var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
-    var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
-    var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
-
-    var mouseX = evt.clientX - rect.x + scrollLeft; 
-    var mouseY = evt.clientY - rect.y + scrollTop; 
+    var mouseX = calculateMousePosition(evt).mouseX; 
+    var mouseY = calculateMousePosition(evt).mouseY; 
 
     if(getPressedPiece(mouseX,mouseY) != null){
         PUZZLE_CONTAINER.style.cursor = 'grab'; 
@@ -152,8 +168,11 @@ function onMouseMove(evt){
         for(let i = 0; i< NODE_PIECES.length; i++){
             NODE_PIECES[i].updateEdgeValues(); 
         }
+
+        
     }
     updateCanvas();
+
 }
 
 //Get array of connected pieces 
@@ -185,6 +204,9 @@ function traverseNodes(rootNode){
  */
 
 function onMouseUp(evt){
+
+    var mouseX = calculateMousePosition(evt).mouseX; 
+    var mouseY = calculateMousePosition(evt).mouseY; 
 
     if(SELECTED_NODE != null){
 
@@ -851,9 +873,13 @@ function expandCompletedPuzzle(){
             }
 
             //Store the orientation 
+            var lastPieceIndex = ORIGINAL_NODE_PIECES_ORDER.length - 1; 
             var orientation = EXPAND_ORIENTATION; 
+
             var image = document.createElement("img");
-            image.src = "./images/VanGogh.jpg";
+
+            image.src = ORIGINAL_NODE_PIECES_ORDER[lastPieceIndex].image.src;
+
             image.onload = function(){
                 expandJigsaw.expandPuzzle(image, orientation); 
             }
