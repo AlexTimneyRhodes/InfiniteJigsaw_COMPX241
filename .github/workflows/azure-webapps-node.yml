@@ -16,6 +16,7 @@ env:
   AZURE_WEBAPP_NAME: 'Engen241InfiniteJigsaw'    
   AZURE_WEBAPP_PACKAGE_PATH: '.'      
   NODE_VERSION: '14.x'                
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 permissions:
   contents: read
