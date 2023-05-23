@@ -12,8 +12,11 @@ const fetch = require("node-fetch");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const FormData = require("form-data");
+const { env } = require("process");
 const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
+const dotenv = require("dotenv");
 
+dotenv.config();
 async function removeTempFile(filePath) {
   try {
     fs.unlinkSync(filePath);
@@ -21,16 +24,14 @@ async function removeTempFile(filePath) {
     console.error(`Error deleting file: ${filePath}`, err);
   }
 }
-
 // function to call the DALL-E API
 //shiftedImagePath is the path to the image that is to be extended, it should contain the image and the mask(transparent part is to be replaced)
 //prompt is the prompt to be used for the API
 async function callDalleAPI(shiftedImagePath, prompt) {
   const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: process.env.OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
-
   const formData = new FormData();
   formData.append("image", fs.createReadStream(shiftedImagePath));
   formData.append("mask", fs.createReadStream(shiftedImagePath));
@@ -47,16 +48,15 @@ async function callDalleAPI(shiftedImagePath, prompt) {
   });
 
   
+  const path = `public/gen/temp-${uuidv4()}`;
+  const jsonPath = path + `.json`;
   const jsonResponse = await apiResponse.json();
+
+  //write the json response to a file
+  fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
 
   const imageData = jsonResponse.data[0].url;
 
-
-  //write the json response to a file
-
-  const path = `public/gen/temp-${uuidv4()}`;
-  const jsonPath = path + `.json`;
-  //fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
 
   //returns the relative path to the image that is to be extended
   const response2 = await fetch(imageData);
