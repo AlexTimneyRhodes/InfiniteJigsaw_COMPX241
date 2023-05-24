@@ -1,2 +1,5 @@
-# .env files
-.env
+# Ignore .env files
+*.env
+
+# Ignore PNG files starting with "temp"
+/temp*.png

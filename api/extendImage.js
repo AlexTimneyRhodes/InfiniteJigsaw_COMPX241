@@ -5,6 +5,7 @@ const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const FormData = require("form-data");
 const { env } = require("process");
+
 const dotenv = require("dotenv");
 
 // the baseURL of the server, comment out the one that is not being used
@@ -44,11 +45,11 @@ async function callDalleAPI(shiftedImagePath, prompt) {
 
   
   const path = `public/gen/temp-${uuidv4()}`;
-  const jsonPath = path + `.json`;
+  //const jsonPath = path + `.json`;
   const jsonResponse = await apiResponse.json();
 
   //write the json response to a file
-  fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
+  //fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
 
   const imageData = jsonResponse.data[0].url;
 

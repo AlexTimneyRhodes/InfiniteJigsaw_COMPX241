@@ -2,6 +2,36 @@
 import * as jigsaw from './jigsaw.js';
 
 
+async function fetchExtendedImage(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+            return statusData.imagePath; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
 
 export function expandPuzzle(img, prompt, orientation){
     
@@ -21,7 +51,6 @@ export function expandPuzzle(img, prompt, orientation){
     var offset = originalPuzzle.OFFSET[0];  
     //Reset the offset array 
     originalPuzzle.OFFSET.length = 0;  
-
     //check if the supplied prompt is valid
     //if it is not valid, pass a default prompt
     if(prompt == null || prompt == undefined || prompt == ""){
@@ -30,28 +59,6 @@ export function expandPuzzle(img, prompt, orientation){
 
 
 
-    let image;
-    const data = {
-        imagePath: img.src,
-        prompt: prompt,
-        direction: orientation
-      };
-      
-      fetch('/api/extendImage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.text())
-      .then(data => {
-        console.log(data)
-        image = data.imagePath; // store the data into the image variable
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
 
       
         
@@ -59,6 +66,8 @@ export function expandPuzzle(img, prompt, orientation){
 
 
 
+    return fetchExtendedImage(img,prompt, orientation).then((image) => {
+        console.log("expand puzzle to the "+orientation+" of the original puzzle")
 
 
 
@@ -84,6 +93,7 @@ export function expandPuzzle(img, prompt, orientation){
 
     
 
+});
 }
 
 
