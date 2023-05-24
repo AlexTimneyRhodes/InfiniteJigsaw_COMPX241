@@ -63,11 +63,16 @@ export function expandPuzzle(img, prompt, orientation){
         prompt = "artistic image of a landscape";
     }
 
+// Show overlay
+document.getElementById('overlay').style.display = 'block';
 
         
 
     return fetchExtendedImage(img,prompt, orientation).then((image) => {
         console.log("expand puzzle to the "+orientation+" of the original puzzle")
+
+    // Hide overlay when done
+    document.getElementById('overlay').style.display = 'none';
 
 
 
@@ -93,9 +98,15 @@ export function expandPuzzle(img, prompt, orientation){
 
     
 
+})
+.catch((error) => {
+    
+    // Hide overlay in case of error
+    document.getElementById('overlay').style.display = 'none';
+
+    console.error('Error:', error);
 });
 }
-
 
 
 
