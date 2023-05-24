@@ -3,7 +3,7 @@ import * as jigsaw from './jigsaw.js';
 
 
 
-export function expandPuzzle(img, orientation){
+export function expandPuzzle(img, prompt, orientation){
     
     //Get the original puzzle information 
     var originalPuzzle = jigsaw.puzzleExpansionInformation(); 
@@ -22,10 +22,18 @@ export function expandPuzzle(img, orientation){
     //Reset the offset array 
     originalPuzzle.OFFSET.length = 0;  
 
+    //check if the supplied prompt is valid
+    //if it is not valid, pass a default prompt
+    if(prompt == null || prompt == undefined || prompt == ""){
+        prompt = "artistic image of a landscape";
+    }
+
+
+
     let image;
     const data = {
         imagePath: img.src,
-        prompt: 'your_prompt',
+        prompt: prompt,
         direction: orientation
       };
       

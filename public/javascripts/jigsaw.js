@@ -18,7 +18,9 @@ let OFFSET = [];
 let LAST_EXPANSION = [];
 let COMPLETED_PUZZLE = false; 
 let EXPAND_ORIENTATION = "NULL"; 
+let TEXT_PROMPT = "";
 var EXPANSION_COUNT = 0; 
+
 
 
 
@@ -41,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //Add the event listener for a completed puzzle 
     ORIENTATION_SELECT = document.getElementsByClassName("orientation").item(0);
+    //TEXT_PROMPT = document.getElementById("textPrompt").value;
     EXPAND_BUTTON = document.getElementById("expand_button");
     addMenuEventListeners();
     
@@ -878,10 +881,11 @@ function expandCompletedPuzzle(){
 
             var image = document.createElement("img");
 
+            //var prompt = TEXT_PROMPT.value;
             image.src = ORIGINAL_NODE_PIECES_ORDER[lastPieceIndex].image.src;
 
             image.onload = function(){
-                expandJigsaw.expandPuzzle(image, orientation); 
+                expandJigsaw.expandPuzzle(image,"", orientation); 
             }
             LAST_EXPANSION.length = 0; 
             LAST_EXPANSION.push(orientation); 
