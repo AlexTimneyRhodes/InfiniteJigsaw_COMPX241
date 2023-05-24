@@ -9,6 +9,10 @@ async function fetchExtendedImage(img,prompt, orientation) {
         direction: orientation
     };
 
+    
+let image;
+      
+
     const response = await fetch('/api/extendImage', {
         method: 'POST',
         headers: {
@@ -26,7 +30,9 @@ async function fetchExtendedImage(img,prompt, orientation) {
         const statusData = await statusResponse.json();
         console.log("job status: "+statusData.status);
         if (statusData.imagePath) {
-            return statusData.imagePath; // Return the image path when the job is done
+            image = document.createElement('img');
+            image.src = statusData.imagePath
+            return image; // Return the image path when the job is done
         }
         await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
     }
@@ -58,13 +64,7 @@ export function expandPuzzle(img, prompt, orientation){
     }
 
 
-
-
-      
         
-
-
-
 
     return fetchExtendedImage(img,prompt, orientation).then((image) => {
         console.log("expand puzzle to the "+orientation+" of the original puzzle")
