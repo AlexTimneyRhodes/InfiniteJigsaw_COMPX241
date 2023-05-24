@@ -9,8 +9,8 @@ const { env } = require("process");
 const dotenv = require("dotenv");
 
 // the baseURL of the server, comment out the one that is not being used
-//const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
-const BASEURL = "http://localhost:3030/";
+const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
+//const BASEURL = "http://localhost:3030/";
 
 dotenv.config();
 async function removeTempFile(filePath) {
