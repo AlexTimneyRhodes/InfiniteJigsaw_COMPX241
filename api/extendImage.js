@@ -1,11 +1,3 @@
-/*
-import { Configuration, OpenAIApi } from "openai";
-import fs from "fs";
-import fetch from "node-fetch";
-import sharp from "sharp";
-import { v4 as uuidv4 } from "uuid";
-import FormData from "form-data";
-*/
 const { Configuration, OpenAIApi } = require("openai");
 const fs = require("fs");
 const fetch = require("node-fetch");
@@ -13,8 +5,12 @@ const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const FormData = require("form-data");
 const { env } = require("process");
-const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
+
 const dotenv = require("dotenv");
+
+// the baseURL of the server, comment out the one that is not being used
+const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
+//const BASEURL = "http://localhost:3030/";
 
 dotenv.config();
 async function removeTempFile(filePath) {
@@ -49,11 +45,11 @@ async function callDalleAPI(shiftedImagePath, prompt) {
 
   
   const path = `public/gen/temp-${uuidv4()}`;
-  const jsonPath = path + `.json`;
+  //const jsonPath = path + `.json`;
   const jsonResponse = await apiResponse.json();
 
   //write the json response to a file
-  fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
+  //fs.writeFileSync(jsonPath, JSON.stringify(jsonResponse));
 
   const imageData = jsonResponse.data[0].url;
 
@@ -121,6 +117,10 @@ async function shiftImage(imagePath, direction) {
 
 module.exports = async function extendImage(imagePath, prompt, direction) {
 //export default async function extendImage(imagePath, prompt, direction) {
+  console.log("extendImage called")
+  console.log("imagePath: "+ imagePath);
+  console.log("prompt: "+ prompt);
+  console.log("direction: "+ direction);
   try {
     console.log("shifting image..." + imagePath);
     const shiftedImagePath = await shiftImage(imagePath, direction);
@@ -134,7 +134,7 @@ module.exports = async function extendImage(imagePath, prompt, direction) {
 
     // Delete temporary files after use
     await removeTempFile(shiftedImagePath);
-    // remove the leading "http://localhost:3030/" and add a "public/" to the beginning of the path of extendedimage
+    // remove the leading BASEURL and add a "public/" to the beginning of the path of extendedimage, to represent where it is stored on the server
     const delExtendedImagePath = extendedImagePath.replace(BASEURL, "public/");
 
     await removeTempFile(delExtendedImagePath);

@@ -12,6 +12,9 @@ const extendImage = require('./api/extendImage');
 const db = require('./db');
 const app = express();
 
+// for handling the image generation 'jobs'
+const uuid = require('uuid'); 
+const queue = new Map(); 
 
 
 // Express settings
@@ -95,11 +98,43 @@ app.post('/leaderboard', async (req, res) => {
     res.render('leaderboard', {data: result});
 });
 
+
 // setting up image extension
 app.post('/api/extendImage', async (req, res) => {
   const { imagePath, prompt, direction } = req.body;
-  const extendedImagePath = await extendImage(imagePath, prompt, direction);
-  res.json({ imagePath: extendedImagePath });
+
+  // Generate a unique job ID
+  const jobId = uuid.v4();
+
+  // Create a new job and add it to the queue
+  queue.set(jobId, { status: 'processing' });
+
+  // Start the image generation in the background
+  extendImage(imagePath, prompt, direction)
+    .then((extendedImagePath) => {
+      // Once the image has been generated, update the job status
+      queue.set(jobId, { status: 'done', imagePath: extendedImagePath });
+    });
+
+  // Immediately respond with the job ID
+  res.status(202).json({ jobId });
+});
+
+app.get('/api/checkJobStatus/:jobId', async (req, res) => {
+  const { jobId } = req.params;
+
+  // Check the status of the job
+  const jobStatus = queue.get(jobId);
+
+  if (!jobStatus) {
+    return res.status(404).json({ error: 'Job not found' });
+  }
+
+  if (jobStatus.status === 'done') {
+    res.json({ imagePath: jobStatus.imagePath });
+  } else {
+    res.status(202).json({ status: 'processing' });
+  }
 });
 
 
