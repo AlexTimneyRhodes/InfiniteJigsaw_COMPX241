@@ -17,9 +17,9 @@ export function expandPuzzle(orientation){
     //Get the offset for the puzzle edge IDs
     var offset = originalPuzzle.OFFSET[0];  
     //Reset the offset array 
-    originalPuzzle.OFFSET.length = 0;  
-    var image; 
-   
+    originalPuzzle.OFFSET.length = 0; 
+    var image;
+
     //Check the orientation that the use asked for and expand accordingly 
     if(orientation == "LEFT"){
         image = originalPuzzle.leftImage; 

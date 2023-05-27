@@ -7,6 +7,7 @@ const FormData = require("form-data");
 const { env } = require("process");
 
 const dotenv = require("dotenv");
+const { json } = require("express");
 
 // the baseURL of the server, comment out the one that is not being used
 const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
@@ -45,7 +46,7 @@ async function callDalleAPI(shiftedImagePath, prompt) {
 
   
   const path = `public/gen/temp-${uuidv4()}`;
-  //const jsonPath = path + `.json`;
+  const jsonPath = path + `.json`;
   const jsonResponse = await apiResponse.json();
 
   //write the json response to a file
