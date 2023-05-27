@@ -42,9 +42,12 @@ app.get('/register', (req, res) => {
     res.render('register')
 });
 app.get('/puzzle', (req, res) => {
+  res.render('puzzle')
+});
+app.get('/welcome', (req, res) => {
   // checking credentials
   if(req.session.loggedIn){
-    res.render('puzzle')
+    res.render('welcome')
   }else{
     res.redirect('/login')
   }
@@ -76,7 +79,7 @@ app.post('/login', async (req, res) => {
         req.session.userName = req.body.username;
         req.session.save(function (err){
           if(err) return next(err)
-          res.redirect('/puzzle')
+          res.redirect('/welcome')
         });
       });
     }else{

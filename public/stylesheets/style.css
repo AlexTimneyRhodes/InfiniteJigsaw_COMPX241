@@ -4,11 +4,7 @@ body{
 }
 
 #myCanvas{
-    /* position: absolute;
-    left:0;
-    top:0;   */
     display: block; 
-    /* width: 100%; */
 }
 
 div#puzzleContainer{
@@ -36,6 +32,25 @@ div#puzzleContainer{
     
 }
 
+#welcomePage{
+    position: absolute;
+    width: 50%;
+    height:80%; 
+    top: 70%;
+    left: 50%;
+    transform:translate(-50%, -70%);
+    background: linear-gradient(0deg, rgb(168, 168, 168), rgb(75, 74, 74));
+    vertical-align: middle;
+    border: rgba(0, 0, 0, 1) solid;
+    border-width: 10px;
+    border-radius: 2dvh;
+    display:inline-block;
+    border-style:ridge;
+    box-shadow: 2px 2px 5px black;
+    overflow:auto; 
+    
+}
+
 #finishPuzzleMenuItems h2{
 
     text-align: center;
@@ -46,34 +61,172 @@ div#puzzleContainer{
 
 }
 
-#finishPuzzleMenuItems p{
+#welcomePage h1{
+    text-align: center;
+    color:white; 
+    font-family: 'Century Gothic', sans-serif;
+    font-weight: 550;
+    font-size:25;
+}
+
+@media(min-width: 1800px){
+
+    #welcomePage h1{
+        font-size: 35;
+    }
+    
+    #textListFont{
+        font-size:14;
+    }
+    
+    .welcomeItem{
+        margin-bottom: 5%;
+        display: inline-block;
+
+    }
+    
+    #textFirstPrompt{
+        height:8dvh;
+        font-size: medium;
+    }
+
+    #difficulty{
+        height:8dvh;
+        font-size: medium;
+    }
+
+    
+    #imageSubject{
+        height:8dvh;
+        font-size: medium;
+    }
+
+    #GO{
+        margin-top: 2%;
+        height:10dvh;
+        width:10dvw;
+    }
+
+}
+
+@media(max-width: 1200px){
+    #welcomePage h1{
+        font-size: 25;
+    }
+
+    #textFirstPrompt{
+        height:5dvh;
+    }
+
+    #difficulty{
+        height:5dvh;
+    }
+
+    #imageSubject{
+        height:5dvh;
+        font-size: x-small;
+    }
+
+    .welcomeItem{
+        margin-bottom: 10%;
+
+    } 
+
+}
+ 
+@media(min-height: 600px){
+
+    .welcomeItem{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 15px;
+    
+    }
+
+    label{
+        margin-right: 10px;
+    }
+
+    #labelDifficult{
+        margin-right: 15px;
+    }
+
+}
+
+#infiniteLogo{
+    width: 100px; 
+    height:40px; 
+}
+
+#infiniteLogo img{
+    height: 100%; 
+    width: 100%;
+}
+
+.textRegular {
 
     text-align: center;
     color:white; 
     font-family: 'Century Gothic', Helvetica, sans-serif;
     font-weight: lighter;
-    font-size: medium;
+    font-size: small;
     padding-left: 1dvw;
     padding-right: 1dvw;
 
 
 }
 
+.textList {
 
-#finishPuzzleMenuItems hr{
-    width: 300px;
+    text-align: left;
+    color:white; 
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 12;
+
 }
 
-.userInput, .controls{
+
+.textList li::marker{
+    font-size: 110%;
+    background-color: rgb(0,200,200);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bolder;
+}
+
+#finishPuzzleMenuItems hr{
+    width: 75%;
+}
+
+#welcomePage hr{
+    width:75%;
+}
+
+
+.controls{
     margin-top: 10%;
-    margin-left: 50%;
-    transform: translate(-50%, -10%);
+    transform: translate(0%, -10%);
     height: auto;
     text-align: center;
     position: relative;
+    align-items: center;
     display: inline-block;
 
 }
+
+.userInput{
+    height: auto;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+
+}
+
+
+
 
 .controls #expand_button{
     padding: 8px 32px;
@@ -81,6 +234,20 @@ div#puzzleContainer{
     color: #333333;
     background-color: #eeeeee;
     border: 1px solid #dddddd;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold ;
+    box-shadow: 2px 2px 5px black;
+    cursor: pointer;
+
+}
+
+#GO{
+    padding: 8px 32px;
+    color: #333333;
+    background-color: #6dc580;
+    border: 1px solid #4d9c35;
     border-radius: 5px;
     font-family: 'Century Gothic', Helvetica, sans-serif;
     font-style: normal;
@@ -105,7 +272,7 @@ div#puzzleContainer{
 
 }
 
-.controls  #end_session:hover, #expand_button:hover{  
+ #end_session:hover, #expand_button:hover, #GO:hover {  
     background-color: lightslategray;
     color: white;
     border: 1px solid #dddddd;
@@ -113,15 +280,37 @@ div#puzzleContainer{
 
 
 
-#labelOrient, #labelPrompt{
+label {
     font-family: 'Century Gothic', Helvetica, sans-serif;
     text-decoration: none;
     font-style: normal;
-    font-weight: 500;
+    font-weight: bold;
     color: white;
-    text-align: right;
     padding-right: 10px;
+    font-size: 14;
+    max-width: 80px;
+    word-wrap: break-word;
+    display: none;
 
+
+}
+
+#labelPrompt{
+    max-width: 200px;
+    word-wrap: normal;
+    margin-right: 2px;
+
+}
+
+
+#promptContainer{
+    margin-left: 15px;
+}
+
+#labelDifficult{
+    padding: 5px; 
+    background-color: rgba(255, 7, 7, 0.4);
+    border-radius: 5px;
 }
 
 #textPrompt{
@@ -138,6 +327,57 @@ div#puzzleContainer{
     font-style: normal;
     font-weight: light ;
     box-shadow: 2px 2px 5px rgb(90, 90, 90);
+    margin-top: 2dvh;
+
+}
+
+#textFirstPrompt{
+
+    padding-top: 8px; 
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right:30px;
+    width:25dvw;
+    color: #333333;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: light ;
+    box-shadow: 2px 2px 5px rgb(90, 90, 90);
+
+}
+
+#imageSubject{
+
+    padding: 8px 12px; 
+    width:25dvw; 
+    color: #333333;
+    background-color: #eeeeee;
+    border: 3px solid rgba(117, 117, 117, 0.486);
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
+
+
+
+}
+
+#difficulty{
+
+    padding: 8px 12px; 
+    width:25dvw; 
+    color: #333333;
+    background-color: #eeeeee;
+    border: 3px solid rgba(117, 117, 117, 0.486);
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
 
 }
 

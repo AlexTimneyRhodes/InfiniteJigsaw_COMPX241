@@ -1,4 +1,6 @@
 import * as expandJigsaw from './jigsaw_expansion.js';
+import * as setup from './setup.js';
+
 
 //Set up global variables 
 let IMAGE=null;
@@ -18,11 +20,166 @@ let OFFSET = [];
 let LAST_EXPANSION = [];
 let COMPLETED_PUZZLE = false; 
 let EXPAND_ORIENTATION = "NULL"; 
-let TEXT_PROMPT = "";
+let NEXT_PROMPT=null;
+let IS_VALID_NEXT_PROMPT = false;
+let VALID_NEXT_PROMPT = ""; 
 var EXPANSION_COUNT = 0; 
+let NEXT_IMAGE_LEFT; 
+let NEXT_IMAGE_RIGHT; 
+let NEXT_IMAGE_TOP; 
+let NEXT_IMAGE_BOTTOM; 
 
 
+export async function fetchExtendedImageLeft(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+      
+    NEXT_IMAGE_LEFT = null; 
 
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+         
+            NEXT_IMAGE_LEFT = document.createElement('img');
+            NEXT_IMAGE_LEFT.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE");
+                
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
+export async function fetchExtendedImageTop(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+    
+    NEXT_IMAGE_TOP = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+           
+            NEXT_IMAGE_TOP = document.createElement('img');
+            NEXT_IMAGE_TOP.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_TOP");
+            
+         
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
+export async function fetchExtendedImageRight(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+    
+    NEXT_IMAGE_RIGHT = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+           
+            NEXT_IMAGE_RIGHT = document.createElement('img');
+            NEXT_IMAGE_RIGHT.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_RIGHT");
+            
+         
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
+export async function fetchExtendedImageBottom(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+    
+    NEXT_IMAGE_BOTTOM = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+           
+            NEXT_IMAGE_BOTTOM = document.createElement('img');
+            NEXT_IMAGE_BOTTOM.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_TOP");
+            
+         
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
 
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -39,17 +196,29 @@ document.addEventListener("DOMContentLoaded", function(){
     CANVAS.height=PUZZLE_CONTAINER.offsetHeight; 
 
     IMAGE = document.createElement("img");
-    IMAGE.src = "./images/starryNight.png"; //Sources the image 
+    //Get the image path 
+    var imagePath = setup.getCookie("imagePath");
+    IMAGE.src = imagePath; //Sources the image 
+
+    var prompt = setup.getCookie("firstPrompt"); 
+
+    fetchExtendedImageLeft(IMAGE, prompt, "LEFT");     
+    fetchExtendedImageTop(IMAGE, prompt, "TOP"); 
+    fetchExtendedImageRight(IMAGE, prompt, "RIGHT"); 
+    fetchExtendedImageBottom(IMAGE, prompt, "BOTTOM"); 
 
     //Add the event listener for a completed puzzle 
     ORIENTATION_SELECT = document.getElementsByClassName("orientation").item(0);
     //TEXT_PROMPT = document.getElementById("textPrompt").value;
     EXPAND_BUTTON = document.getElementById("expand_button");
+    NEXT_PROMPT = document.getElementById("textPrompt"); 
     addMenuEventListeners();
     
     //Sets up the drag and drop functions 
     addEventListeners(); 
     OFFSET.push(1);
+
+    setDifficultyLevel();
     
     IMAGE.onload = function(){ //Once the image is loaded, resize the image and update the canvas 
         window.addEventListener("resize", handleResize);
@@ -60,7 +229,38 @@ document.addEventListener("DOMContentLoaded", function(){
         
     }
 
+       
+
 });
+
+function setDifficultyLevel(){
+
+    var difficultyLevel = setup.getCookie("difficultyLevel"); 
+    switch(difficultyLevel){
+
+        case "EASY":
+            SIZE.rows = 3; 
+            SIZE.columns = 3;
+            break; 
+        case "MEDIUM":
+            SIZE.rows = 5; 
+            SIZE.columns = 5;
+            break; 
+        case "HARD":
+            SIZE.rows = 9; 
+            SIZE.columns = 9;
+            break; 
+        case "INSANE":
+            SIZE.rows = 15; 
+            SIZE.columns = 15;
+            break; 
+        default:
+            SIZE.rows = 3; 
+            SIZE.columns = 3;
+            break;     
+
+    }
+}
 
 function addMenuEventListeners(){
     ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
@@ -399,6 +599,10 @@ function onMouseUp(evt){
             ORIENTATION_SELECT.selectedIndex = 0; 
             removeEventListeners(); 
 
+            checkLeftImage(); 
+            checkBottomImage(); 
+            checkRightImage(); 
+            checkTopImage();
             
         }
 
@@ -444,8 +648,8 @@ export function randomisePieces(startPiece){
    
     for(let i=startPiece; i< NODE_PIECES.length; i++){
         let local = {
-            x: Math.random() * (PUZZLE_CONTAINER.offsetWidth - (NODE_PIECES[i].piece.width + NODE_PIECES[i].piece.width*0.1)) , 
-            y:Math.random() * (PUZZLE_CONTAINER.offsetHeight - (NODE_PIECES[i].piece.height+ NODE_PIECES[i].piece.height*0.1))
+            x: Math.random() * (PUZZLE_CONTAINER.offsetWidth - (NODE_PIECES[i].piece.width + NODE_PIECES[i].piece.width*1.2)) , 
+            y:Math.random() * (PUZZLE_CONTAINER.offsetHeight - (NODE_PIECES[i].piece.height+ NODE_PIECES[i].piece.height*1.5))
         }; 
         NODE_PIECES[i].piece.x = local.x;
         NODE_PIECES[i].piece.y = local.y; 
@@ -494,8 +698,8 @@ export function handleResize(scaler){
         );
     SIZE.width = resizer*IMAGE.width;
     SIZE.height = resizer*IMAGE.height; 
-    SIZE.x=window.innerWidth/2-SIZE.width/2;
-    SIZE.y=window.innerHeight/2-(SIZE.height/6)*7;
+    SIZE.x=window.innerWidth/2-SIZE.width;
+    SIZE.y=window.innerHeight/2-SIZE.height;
 
     if(NODE_PIECES.length > 0){
         updateCanvas();
@@ -592,20 +796,47 @@ function initialisePieces(rows, cols){
  */
 export function puzzleExpansionInformation(){
 
+    //Triple check if the image has been processed 
+    if(NEXT_IMAGE_LEFT === null || NEXT_IMAGE_RIGHT === null || NEXT_IMAGE_TOP === null || NEXT_IMAGE_LEFT === null){
+        checkLeftImage(); 
+        checkBottomImage(); 
+        checkRightImage(); 
+        checkTopImage();
+    }
+
+    var rows = SIZE.rows; 
+    var columns = SIZE.columns; 
+    var leftImage = document.createElement("img");
+    leftImage.src = NEXT_IMAGE_LEFT.src;  
+
+    var rightImage = document.createElement("img");
+    rightImage.src = NEXT_IMAGE_RIGHT.src; 
+
+    var bottomImage = document.createElement("img");
+    bottomImage.src = NEXT_IMAGE_BOTTOM.src; 
+
+    var topImage = document.createElement("img");
+    topImage.src = NEXT_IMAGE_TOP.src; 
+
+    var expansionCount  = EXPANSION_COUNT; 
     return{
 
         ORIGINAL_NODE_PIECES_ORDER, 
         NODE_PIECES,
-        SIZE, 
+        rows,
+        columns, 
         OFFSET, 
         SCALER, 
-        EXPANSION_COUNT,
+        expansionCount,
         LAST_EXPANSION,
-        EXPAND_ORIENTATION
+        EXPAND_ORIENTATION,
+        leftImage,
+        rightImage,
+        bottomImage, 
+        topImage
     }
     
 }
-
 
 
 /**
@@ -851,10 +1082,24 @@ function checkExpansionValidity(){
 }
 
 function expandCompletedPuzzle(){
+    
+    //Double check if the image has been processed 
+    if(NEXT_IMAGE_LEFT === null || NEXT_IMAGE_RIGHT === null || NEXT_IMAGE_TOP === null || NEXT_IMAGE_LEFT === null){
+        checkLeftImage(); 
+        checkBottomImage(); 
+        checkRightImage(); 
+        checkTopImage();
+    }
 
+
+    getNextPrompt(); 
     if(COMPLETED_PUZZLE == false){
         alert("Puzzle must be completed before expansion"); 
-    }else{
+    }
+    else if(IS_VALID_NEXT_PROMPT == false){
+        alert("You must enter a valid prompt"); 
+    }
+    else{
 
         //Get the value of the expansion orientation 
         if(EXPAND_ORIENTATION != "NULL"){
@@ -874,24 +1119,50 @@ function expandCompletedPuzzle(){
             
 
             }
+            else if(EXPAND_ORIENTATION == "RIGHT"){
+                
+                CANVAS.width *= 1.5; 
+               
+                for(let i = 0; i < NODE_PIECES.length; i++){
+                    //Increase the y position of each piece by 2
+                    NODE_PIECES[i].piece.x -= 300;
+                    NODE_PIECES[i].updateEdgeValues(); 
+    
+                }
+
+            }else if(EXPAND_ORIENTATION == "LEFT"){
+
+                CANVAS.width *= 1.5; 
+               
+                for(let i = 0; i < NODE_PIECES.length; i++){
+                    //Increase the y position of each piece by 2
+                    NODE_PIECES[i].piece.x += 300;
+                    NODE_PIECES[i].updateEdgeValues(); 
+    
+                }
+
+            }
 
             //Store the orientation 
-            var lastPieceIndex = ORIGINAL_NODE_PIECES_ORDER.length - 1; 
             var orientation = EXPAND_ORIENTATION; 
-
-            var image = document.createElement("img");
-
-            //var prompt = TEXT_PROMPT.value;
-            image.src = ORIGINAL_NODE_PIECES_ORDER[lastPieceIndex].image.src;
-
-            image.onload = function(){
-                expandJigsaw.expandPuzzle(image,"", orientation); 
-            }
+            
+            //Expand the jigsaw in the correct direction 
+            expandJigsaw.expandPuzzle(orientation); 
+            
             LAST_EXPANSION.length = 0; 
             LAST_EXPANSION.push(orientation); 
             EXPAND_ORIENTATION = "NULL"; 
             EXPANSION_COUNT++; 
-            COMPLETE_MENU_ITEMS.style.display = "none";
+            COMPLETE_MENU_ITEMS.style.display = "none"; 
+
+            var lastPieceIndex = ORIGINAL_NODE_PIECES_ORDER.length - 1; 
+            var prev_image = document.createElement("img");
+            prev_image.src = ORIGINAL_NODE_PIECES_ORDER[lastPieceIndex].image.src;
+            
+            fetchExtendedImageLeft(prev_image, VALID_NEXT_PROMPT, "LEFT");     
+            fetchExtendedImageTop(prev_image, VALID_NEXT_PROMPT, "TOP"); 
+            fetchExtendedImageRight(prev_image, VALID_NEXT_PROMPT, "RIGHT"); 
+            fetchExtendedImageBottom(prev_image, VALID_NEXT_PROMPT, "BOTTOM"); 
 
 
 
@@ -905,9 +1176,91 @@ function expandCompletedPuzzle(){
         addEventListeners()
         updateCanvas();
 
-
     }
 
+}
+
+function getNextPrompt(){
+    var textPrompt = NEXT_PROMPT.value; 
+    var placeholder = NEXT_PROMPT.placeholder; 
+
+    if(textPrompt == placeholder || textPrompt == ""){
+        IS_VALID_NEXT_PROMPT = false; 
+    }else{
+        VALID_NEXT_PROMPT = textPrompt; 
+        IS_VALID_NEXT_PROMPT = true; 
+    }
+
+}
 
 
+async function waitForLeftImage(){
+    
+    while(true){
+        if(NEXT_IMAGE_BOTTOM !== null){
+            return true; 
+        }
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+    }
+}
+
+async function waitForRightImage(){
+
+    while(true){
+        if(NEXT_IMAGE_BOTTOM !== null){
+            return true; 
+        }
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+    }
+
+}
+
+async function waitForTopImage(){
+
+    while(true){
+        if(NEXT_IMAGE_TOP !== null){
+            return true; 
+        }
+       await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+    }
+
+}
+
+async function waitForBottomImage(){
+
+   while(true){
+    if(NEXT_IMAGE_BOTTOM !== null){
+        return true; 
+    }
+    await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+   }
+
+}
+
+
+function checkLeftImage(){
+    document.getElementById('overlay').style.display = 'block';
+    return waitForLeftImage().then((notNull) => {
+        console.log("LEFT IMAGE IS AVAILABLE : " + notNull); 
+    });
+}
+
+function checkRightImage(){
+    return waitForRightImage().then((notNull) => {
+        console.log("RIGHT IMAGE IS AVAILABLE : " + notNull); 
+    });
+}
+
+
+function checkBottomImage(){
+    return waitForBottomImage().then((notNull) => {
+        console.log("BOTTOM IMAGE IS AVAILABLE : " + notNull); 
+    });
+}
+
+function checkTopImage(){
+    return waitForTopImage().then((notNull) => {
+        console.log("TOP IMAGE IS AVAILABLE : " + notNull); 
+        document.getElementById('overlay').style.display = 'none';
+    });
 }

@@ -1,0 +1,61 @@
+<html>
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <%- include('header') %>
+
+    <div id="welcomePage" >
+        <h1>INFINITE JIGSAW 🧩</h1>
+        <hr>
+        <p class="textRegular">Welcome to your first puzzle that will begin your <b>INFINITE JIGSAW</b>! </p>
+        <hr>
+        <div class = "userInput">
+        <div>
+            <ol id= "textListFont" class="textList">    
+                <li>Select a type of image you would like your puzzle to be from the options below</li>
+                <br>
+                <li>Select the difficulty of the puzzle</li>
+                <br>
+                <li>Enter the prompt of your first expansion</li>
+                <br>
+                <li>Select the first edge that you want to expand from</li>
+                <br>
+                <li>Start your puzzle by clicking GO!</li>
+                <br>
+            </ol>
+        </div>
+
+
+            <div class = "welcomeItem">
+                <label for="imageSubject">IMAGE SUBJECT: </label>
+                    <select id="imageSubject">
+                    <option value="NULL">Select image subject...</option>
+                    <option value="LANDSCAPE">Landscape</option>
+                    <option value="VANGOGH">Van Gogh</option>
+
+                </select>
+            </div>
+            
+            <div class = "welcomeItem">
+                <label id="labelDifficult" for="difficulty">DIFFICULTY:</label>
+                    <select id="difficulty">
+                    <option value="NULL">Select Difficulty</option>
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HARD">Hard</option>
+                    <option value="INSANE">Insane</option>
+
+                </select>
+            </div>  
+
+            <div class = "welcomeItem">
+                <label for="textFirstPrompt">FIRST PROMPT: </label>
+                <input type="text" id="textFirstPrompt" placeholder="Enter prompt here...">
+            </div> 
+            <hr>
+            <button id = "GO">GO!</button>
+        </div>
+    </div>
+
+    <script type = "module" src="/javascripts/setup.js"></script>
+  </body>
+</html>
