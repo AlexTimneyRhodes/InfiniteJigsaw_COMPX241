@@ -70,7 +70,8 @@ document.getElementById('overlay').style.display = 'block';
 
     return fetchExtendedImage(img,prompt, orientation).then((image) => {
         console.log("expand puzzle to the "+orientation+" of the original puzzle")
-
+console.log("image path: "+image.src);
+console.log("image" + image);
     // Hide overlay when done
     document.getElementById('overlay').style.display = 'none';
 
