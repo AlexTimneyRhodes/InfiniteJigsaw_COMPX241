@@ -3,3 +3,6 @@
 
 # Ignore PNG files starting with "temp"
 /temp*.png
+
+#ignore files in the generation folder
+/public/gen/*
