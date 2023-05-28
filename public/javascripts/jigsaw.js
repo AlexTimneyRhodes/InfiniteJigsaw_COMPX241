@@ -28,6 +28,42 @@ let NEXT_IMAGE_LEFT;
 let NEXT_IMAGE_RIGHT; 
 let NEXT_IMAGE_TOP; 
 let NEXT_IMAGE_BOTTOM; 
+let DISPLAY_ROUND = null; 
+let [seconds,minutes,hours] = [0,0,0]; 
+let DISPLAY_TIME = null; 
+let timer = null; 
+
+
+function stopWatch(){
+    seconds++;
+    if(seconds == 60){
+        seconds =0; 
+        minutes++; 
+        if(minutes == 60){
+            minutes = 0; 
+            hours++; 
+        }
+    }
+
+    let h = hours < 10 ? "0" + hours : hours; 
+    let m = minutes < 10 ? "0" + minutes : minutes; 
+    let s = seconds < 10 ? "0" + seconds : seconds; 
+
+    DISPLAY_TIME.innerHTML = h + ":" + m + ":" + s; 
+} 
+
+function timeStart(){
+    if(timer !== null){
+        clearInterval(timer); 
+    }
+    timer = setInterval(stopWatch, 1000); 
+
+}
+
+function timeStop(){
+    clearInterval(timer); 
+
+}
 
 
 export async function fetchExtendedImageLeft(img,prompt, orientation) {
@@ -184,6 +220,10 @@ export async function fetchExtendedImageBottom(img,prompt, orientation) {
 
 document.addEventListener("DOMContentLoaded", function(){
     COMPLETE_MENU_ITEMS = document.getElementById("finishPuzzleMenuItems");
+    document.getElementById('score').style.display = 'block'; 
+    DISPLAY_ROUND = document.getElementById("round"); 
+    DISPLAY_TIME = document.getElementById("timer");
+
     // COMPLETE_MENU_ITEMS.style.display = "none";
     
     CANVAS=document.getElementById("myCanvas"); //Gets the canvas element from the HTML document
@@ -226,6 +266,7 @@ document.addEventListener("DOMContentLoaded", function(){
         initialisePieces(SIZE.rows, SIZE.columns); //Initialises the pieces of the puzzle to the default value 
         randomisePieces(0); 
         updateCanvas(); 
+        timeStart(); 
         
     }
 
@@ -620,7 +661,7 @@ function onMouseUp(){
 
         //Expand the array if the connected array of the selected piece is has the total number of nodes in the puzzle 
         if(CONNECTED_ARRAY.length == NODE_PIECES.length /*&& NODE_PIECES.length == (SIZE.columns * SIZE.rows * RIGHT_EXPANSION_COUNT)*/){
-            
+            timeStop(); 
             COMPLETED_PUZZLE = true; 
             COMPLETE_MENU_ITEMS.style.display = "block";
             var textBox = document.getElementById("textPrompt");
@@ -629,10 +670,9 @@ function onMouseUp(){
             removeEventListeners(); 
 
             checkLeftImage(); 
-            checkBottomImage(); 
-            checkRightImage(); 
             checkTopImage();
-            
+            checkRightImage(); 
+            checkBottomImage(); 
         }
 
     }
@@ -823,9 +863,9 @@ export function puzzleExpansionInformation(){
     //Triple check if the image has been processed 
     if(NEXT_IMAGE_LEFT === null || NEXT_IMAGE_RIGHT === null || NEXT_IMAGE_TOP === null || NEXT_IMAGE_LEFT === null){
         checkLeftImage(); 
-        checkBottomImage(); 
-        checkRightImage(); 
         checkTopImage();
+        checkRightImage(); 
+        checkBottomImage(); 
     }
 
     var rows = SIZE.rows; 
@@ -1110,9 +1150,9 @@ function expandCompletedPuzzle(){
     //Double check if the image has been processed 
     if(NEXT_IMAGE_LEFT === null || NEXT_IMAGE_RIGHT === null || NEXT_IMAGE_TOP === null || NEXT_IMAGE_LEFT === null){
         checkLeftImage(); 
-        checkBottomImage(); 
-        checkRightImage(); 
         checkTopImage();
+        checkRightImage(); 
+        checkBottomImage(); 
     }
 
 
@@ -1199,6 +1239,8 @@ function expandCompletedPuzzle(){
         COMPLETED_PUZZLE = false; 
         addEventListeners()
         updateCanvas();
+        DISPLAY_ROUND.innerHTML = EXPANSION_COUNT + 1; 
+        timeStart(); 
 
     }
 
@@ -1224,7 +1266,7 @@ async function waitForLeftImage(){
         if(NEXT_IMAGE_BOTTOM !== null){
             return true; 
         }
-        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
     }
 }
 
@@ -1234,7 +1276,7 @@ async function waitForRightImage(){
         if(NEXT_IMAGE_BOTTOM !== null){
             return true; 
         }
-        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
     }
 
 }
@@ -1245,7 +1287,7 @@ async function waitForTopImage(){
         if(NEXT_IMAGE_TOP !== null){
             return true; 
         }
-       await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+       await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
     }
 
 }
@@ -1256,7 +1298,7 @@ async function waitForBottomImage(){
     if(NEXT_IMAGE_BOTTOM !== null){
         return true; 
     }
-    await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 10 seconds before the next check
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
    }
 
 }
@@ -1266,25 +1308,43 @@ function checkLeftImage(){
     document.getElementById('overlay').style.display = 'block';
     return waitForLeftImage().then((notNull) => {
         console.log("LEFT IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }    
+        return notNull; 
     });
 }
 
 function checkRightImage(){
+    document.getElementById('overlay').style.display = 'block';
     return waitForRightImage().then((notNull) => {
         console.log("RIGHT IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_LEFT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }        
+        return notNull; 
     });
 }
 
 
 function checkBottomImage(){
+    document.getElementById('overlay').style.display = 'block';
     return waitForBottomImage().then((notNull) => {
         console.log("BOTTOM IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }
+        return notNull; 
     });
 }
 
 function checkTopImage(){
+    document.getElementById('overlay').style.display = 'block';
     return waitForTopImage().then((notNull) => {
         console.log("TOP IMAGE IS AVAILABLE : " + notNull); 
-        document.getElementById('overlay').style.display = 'none';
+        if(NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }
+        return notNull;
     });
 }
