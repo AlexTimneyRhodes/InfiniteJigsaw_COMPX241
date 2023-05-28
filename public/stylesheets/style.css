@@ -81,7 +81,9 @@ div#puzzleContainer{
     
     .welcomeItem{
         margin-bottom: 5%;
-        display: inline-block;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
     }
     
@@ -115,22 +117,33 @@ div#puzzleContainer{
     }
 
     #textFirstPrompt{
-        height:5dvh;
+        font-size: x-small;
     }
 
     #difficulty{
-        height:5dvh;
+        font-size: x-small;
     }
 
     #imageSubject{
-        height:5dvh;
         font-size: x-small;
     }
 
     .welcomeItem{
-        margin-bottom: 10%;
+        margin-bottom: 3%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
 
     } 
+
+    #labelDifficult{
+        margin-right: 8px;
+    }
+
+    #GO{
+        margin-bottom: 5%;
+    }
 
 }
  
@@ -140,7 +153,7 @@ div#puzzleContainer{
         display: flex;
         flex-direction: row;
         align-items: center;
-        margin-bottom: 15px;
+        margin-bottom: 2%;
     
     }
 
@@ -153,6 +166,42 @@ div#puzzleContainer{
     }
 
 }
+
+@media(max-width: 767px){
+
+    label{
+        font-size: small;
+    }
+    #welcomePage{
+        width:70%;
+    }
+
+    #header li a {
+        font-size: small;
+    }
+
+    #labelDifficult{
+        margin-right: 8px;
+    }
+
+}
+
+@media(max-width: 820px){
+    #welcomePage{
+        width:70%;
+        height:auto;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%, -50%);
+        
+    }
+
+
+    #header li a {
+        font-size: small;
+    }
+}
+
 
 #infiniteLogo{
     width: 100px; 
@@ -290,7 +339,7 @@ label {
     font-size: 14;
     max-width: 80px;
     word-wrap: break-word;
-    display: none;
+    display: inline-block;
 
 
 }

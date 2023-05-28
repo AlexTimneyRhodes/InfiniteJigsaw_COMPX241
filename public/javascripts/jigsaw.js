@@ -271,16 +271,30 @@ function addEventListeners(){
     CANVAS.addEventListener("mousedown", onMouseDown);
     CANVAS.addEventListener("mousemove", onMouseMove);
     CANVAS.addEventListener("mouseup", onMouseUp);
-    // PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
+    CANVAS.addEventListener("touchstart", onTouchStart);
+    CANVAS.addEventListener("touchmove", onTouchMove);
+    CANVAS.addEventListener("touchend", onTouchEnd);
 
+}
 
+function onTouchStart(evt){
+    let loc = {x: evt.touches[0].clientX, y:evt.touches[0].clientY};
+    onMouseDown(loc, true, evt);
+}
+
+function onTouchMove(evt){
+    let loc = {x: evt.touches[0].clientX, y:evt.touches[0].clientY};
+    onMouseMove(loc, true, evt);
+}
+
+function onTouchEnd(){
+    onMouseUp();
 }
 
 function removeEventListeners(){
     CANVAS.removeEventListener("mousedown", onMouseDown);
     CANVAS.removeEventListener("mousemove", onMouseMove);
     CANVAS.removeEventListener("mouseup", onMouseUp);
-    //PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
 }
 
 
@@ -289,14 +303,23 @@ function removeEventListeners(){
  * @param {The mouse down, up or move event} evt 
  * @returns 
  */
-function calculateMousePosition(evt){
+function calculateMousePosition(evt, touch){
 
+    var mouseX, mouseY; 
     var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
     var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 
-    var mouseX = evt.clientX - rect.x + scrollLeft; 
-    var mouseY = evt.clientY - rect.y + scrollTop; 
+    if(touch == true){
+
+        mouseX = evt.x  - rect.x + scrollLeft; 
+        mouseY = evt.y - rect.y + scrollTop; 
+    }
+    else{
+        
+        mouseX = evt.clientX - rect.x + scrollLeft; 
+        mouseY = evt.clientY - rect.y + scrollTop; 
+    }
 
     return {
         mouseX, mouseY
@@ -304,13 +327,18 @@ function calculateMousePosition(evt){
 
 }
 
-function onMouseDown(evt){
+function onMouseDown(evt, touch, touchEvent){
 
-    var mouseX = calculateMousePosition(evt).mouseX; 
-    var mouseY = calculateMousePosition(evt).mouseY; 
+
+    var mouseX = calculateMousePosition(evt, touch).mouseX; 
+    var mouseY = calculateMousePosition(evt, touch).mouseY; 
+    
 
     SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
+        if(touch == true){
+            touchEvent.preventDefault(); 
+        }
         PUZZLE_CONTAINER.style.cursor = 'grabbing'; 
         //Make sure top most piece is always grabbed first
         const index = NODE_PIECES.indexOf(SELECTED_NODE);
@@ -331,10 +359,11 @@ function onMouseDown(evt){
     updateCanvas();
 }
 
-function onMouseMove(evt){
+function onMouseMove(evt, touch){
 
-    var mouseX = calculateMousePosition(evt).mouseX; 
-    var mouseY = calculateMousePosition(evt).mouseY; 
+    
+    var mouseX = calculateMousePosition(evt, touch).mouseX; 
+    var mouseY = calculateMousePosition(evt, touch).mouseY; 
 
     if(getPressedPiece(mouseX,mouseY) != null){
         PUZZLE_CONTAINER.style.cursor = 'grab'; 
@@ -406,10 +435,10 @@ function traverseNodes(rootNode){
  * @param {The mouse up event} evt 
  */
 
-function onMouseUp(evt){
+function onMouseUp(){
 
-    var mouseX = calculateMousePosition(evt).mouseX; 
-    var mouseY = calculateMousePosition(evt).mouseY; 
+    // var mouseX = calculateMousePosition(evt).mouseX; 
+    // var mouseY = calculateMousePosition(evt).mouseY; 
 
     if(SELECTED_NODE != null){
 
@@ -609,12 +638,7 @@ function onMouseUp(evt){
     }
     //Unselect the node and update canvas to reflect change
     SELECTED_NODE = null; 
-    if(getPressedPiece(mouseX,mouseY) != null){
-        PUZZLE_CONTAINER.style.cursor = 'grab'; 
-    }
-    else{
-        PUZZLE_CONTAINER.style.cursor = 'default'; 
-    }    
+   
     updateCanvas(); 
     
 }
