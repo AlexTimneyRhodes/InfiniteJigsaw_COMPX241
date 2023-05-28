@@ -9,6 +9,7 @@ let CONTEXT=null;
 let PUZZLE_CONTAINER=null; 
 let ORIENTATION_SELECT=null; 
 let EXPAND_BUTTON=null;
+let EXPORTPUZZLE_BUTTON=null;
 let COMPLETE_MENU_ITEMS=null; 
 let SCALER=0.6; 
 export let SIZE={x:0,y:0,width:0,height:0, rows:3, columns:3};
@@ -302,6 +303,7 @@ document.addEventListener("DOMContentLoaded", function(){
     //TEXT_PROMPT = document.getElementById("textPrompt").value;
     EXPAND_BUTTON = document.getElementById("expand_button");
     NEXT_PROMPT = document.getElementById("textPrompt"); 
+    EXPORTPUZZLE_BUTTON = document.getElementById("exportPuzzle_Button");
     addMenuEventListeners();
     
     //Sets up the drag and drop functions 
@@ -365,6 +367,8 @@ function setDifficultyLevel(){
 function addMenuEventListeners(){
     ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
     EXPAND_BUTTON.addEventListener("click", expandCompletedPuzzle);
+    EXPORTPUZZLE_BUTTON.addEventListener("click", exportCanvas);
+
 }
 
 
@@ -1509,4 +1513,31 @@ function checkTopImage(){
         }
         return notNull;
     });
+}
+
+//Function to export the canvas and save it as an image 
+function exportCanvas(){
+    
+        //Get the canvas element 
+        var canvas = document.getElementById("canvas"); 
+    
+        //Create an image 
+        var image = canvas.toDataURL("image/png", 1.0); 
+    
+        //Create a link element 
+        var link = document.createElement("a"); 
+    
+        //Set the href attribute of the link element to the image 
+        link.href = image; 
+    
+        //Set the download attribute of the link element to the image 
+        link.download = "jigsaw.png"; 
+    
+        //Click the link element 
+        link.click(); 
+    
+
+
+
+
 }

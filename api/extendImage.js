@@ -115,9 +115,37 @@ async function shiftImage(imagePath, direction) {
   return shiftedImagePath;
 }
 
+// function to check the supplied prompt. return true if the prompt is invalid, false otherwise
+async function checkPrompt(prompt) {
+  const { Configuration, OpenAIApi } = require("openai");
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+  const response = await openai.createModeration({
+    input: prompt,
+  });
+
+
+  //check the output of the moderation API
+  //return the 'flagged' property of the output
+  return response.data.output[0].data.flagged;
+
+  
+}
+
+
 
 module.exports = async function extendImage(imagePath, prompt, direction) {
-//export default async function extendImage(imagePath, prompt, direction) {
+  
+    //check if the supplied prompt is valid
+    //if it is not valid, pass a default prompt
+    if(prompt == null || prompt == undefined || prompt == "" || await checkPrompt(prompt)){
+      prompt = "landscape";
+  }
+prompt = "artistic image of a "+prompt;
+
+
   console.log("extendImage called")
   console.log("imagePath: "+ imagePath);
   console.log("prompt: "+ prompt);
