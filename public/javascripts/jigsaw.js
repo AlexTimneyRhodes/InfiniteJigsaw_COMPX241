@@ -367,7 +367,7 @@ function setDifficultyLevel(){
 function addMenuEventListeners(){
     ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
     EXPAND_BUTTON.addEventListener("click", expandCompletedPuzzle);
-    EXPORTPUZZLE_BUTTON.addEventListener("click", exportCanvas);
+    //EXPORTPUZZLE_BUTTON.addEventListener("click", exportCanvas);
 
 }
 

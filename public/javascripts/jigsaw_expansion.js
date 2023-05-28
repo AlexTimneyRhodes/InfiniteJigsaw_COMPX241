@@ -6,8 +6,8 @@ import * as jigsaw from './jigsaw.js';
  * @returns true as the puzzle has been completed
  */
 
+
 export function expandPuzzle(orientation){
-    
     //Get the original puzzle information 
     var originalPuzzle = jigsaw.puzzleExpansionInformation(); 
     var original_node_pieces = originalPuzzle.ORIGINAL_NODE_PIECES_ORDER; 
@@ -23,24 +23,8 @@ export function expandPuzzle(orientation){
     //Get the offset for the puzzle edge IDs
     var offset = originalPuzzle.OFFSET[0];  
     //Reset the offset array 
-    originalPuzzle.OFFSET.length = 0;  
-
-
-
-    
-// Show overlay
-document.getElementById('overlay').style.display = 'block';
-
-        
-
-    return fetchExtendedImage(img,prompt, orientation).then((image) => {
-        console.log("expand puzzle to the "+orientation+" of the puzzle")
-console.log("image path: "+image.src);
-console.log("image" + image);
-    // Hide overlay when done
-    document.getElementById('overlay').style.display = 'none';
-
-
+    originalPuzzle.OFFSET.length = 0; 
+    var image;
 
     //Check the orientation that the use asked for and expand accordingly 
     if(orientation == "LEFT"){
@@ -67,14 +51,6 @@ console.log("image" + image);
     return true;   
 
     
-})
-.catch((error) => {
-    
-    // Hide overlay in case of error
-    document.getElementById('overlay').style.display = 'none';
-
-    console.error('Error:', error);
-});
 }
 
 
