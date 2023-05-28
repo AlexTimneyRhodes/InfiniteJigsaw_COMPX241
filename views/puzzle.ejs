@@ -5,23 +5,25 @@
 
     <!-- loading vignette, initially hidden -->
     <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-      <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2em;">Processing image...</p>
+      <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2em;">Processing Next Image...</p>
   </div>
 
 
     <div id="finishPuzzleMenuItems" >
       <h2>INFINITE JIGSAW EXPANSION</h2>
       <hr>
-      <p>
-        You have completed the puzzle! To expand your puzzle, enter a prompt and select the <b>edge</b> that you want to expand your puzzle from. 
-
+      <p class= "textRegular">
+        You have completed the puzzle! To expand your puzzle, select the <b>edge</b> that you want to expand your puzzle from and enter the prompt for the <b>following</b> puzzle. 
       </p>
       <hr>
       <div class = "userInput">
-        <label id="labelPrompt" for="textPrompt">Prompt: </label>
+        <div>
+        <label id= "labelPrompt" for="textPrompt">NEXT Prompt: </label>
         <input type="text" id="textPrompt" placeholder="Enter prompt here...">
-            <div class = "controls" >
-              <label id="labelOrient" for="orientation">Edge: </label>
+        </div>
+          <div class = "controls" >
+            <div>
+              <label for="orientation">Edge: </label>
               <select class="orientation">
                   <option value="NULL">Select edge...</option>
                   <option value="LEFT">Left</option>
@@ -29,7 +31,7 @@
                   <option value="TOP">Top</option>
                   <option value="BOTTOM">Bottom</option>
               </select>
-              <br>
+            </div>
               <br>
               <hr>
               <br>

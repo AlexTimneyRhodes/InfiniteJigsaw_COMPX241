@@ -4,11 +4,7 @@ body{
 }
 
 #myCanvas{
-    /* position: absolute;
-    left:0;
-    top:0;   */
     display: block; 
-    /* width: 100%; */
 }
 
 div#puzzleContainer{
@@ -36,6 +32,25 @@ div#puzzleContainer{
     
 }
 
+#welcomePage{
+    position: absolute;
+    width: 50%;
+    height:80%; 
+    top: 70%;
+    left: 50%;
+    transform:translate(-50%, -70%);
+    background: linear-gradient(0deg, rgb(168, 168, 168), rgb(75, 74, 74));
+    vertical-align: middle;
+    border: rgba(0, 0, 0, 1) solid;
+    border-width: 10px;
+    border-radius: 2dvh;
+    display:inline-block;
+    border-style:ridge;
+    box-shadow: 2px 2px 5px black;
+    overflow:auto; 
+    
+}
+
 #finishPuzzleMenuItems h2{
 
     text-align: center;
@@ -46,36 +61,211 @@ div#puzzleContainer{
 
 }
 
-#finishPuzzleMenuItems p{
+#welcomePage h1{
+    text-align: center;
+    color:white; 
+    font-family: 'Century Gothic', sans-serif;
+    font-weight: 550;
+    font-size:25;
+}
+
+@media(min-width: 1800px){ /*Edits the display for larger monitor screens*/
+
+    #welcomePage h1{
+        font-size: 35;
+    }
+    
+    #textListFont{
+        font-size:14;
+    }
+    
+    .welcomeItem{
+        margin-bottom: 5%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+    }
+    
+    #textFirstPrompt{
+        height:8dvh;
+        font-size: medium;
+    }
+
+    #difficulty{
+        height:8dvh;
+        font-size: medium;
+    }
+
+    
+    #imageSubject{
+        height:8dvh;
+        font-size: medium;
+    }
+
+    #GO{
+        margin-top: 2%;
+        height:10dvh;
+        width:10dvw;
+    }
+
+}
+
+@media(max-width: 1200px){ /*Edits the display for regular 15" laptop screens*/
+    #welcomePage h1{
+        font-size: 25;
+    }
+
+    #textFirstPrompt{
+        font-size: x-small;
+    }
+
+    #difficulty{
+        font-size: x-small;
+    }
+
+    #imageSubject{
+        font-size: x-small;
+    }
+
+    .welcomeItem{
+        margin-bottom: 3%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+
+    } 
+
+    #labelDifficult{
+        margin-right: 8px;
+    }
+
+    #GO{
+        margin-bottom: 5%;
+    }
+
+}
+ 
+@media(min-height: 600px){ /*Edits the display for restore down window screens*/
+ 
+    .welcomeItem{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 2%;
+    
+    }
+
+    label{
+        margin-right: 10px;
+    }
+
+    #labelDifficult{
+        margin-right: 15px;
+    }
+
+}
+
+@media(max-width: 767px){ /*Edits the display for PHONE*/
+
+    label{
+        font-size: small;
+    }
+    #welcomePage{
+        width:70%;
+    }
+
+    #header li a {
+        font-size: small;
+    }
+
+    #labelDifficult{
+        margin-right: 8px;
+    }
+
+}
+
+@media(max-width: 820px){ /*Edits the display for IPAD AIR*/
+    #welcomePage{
+        width:70%;
+        height:auto;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%, -50%);
+        
+    }
+
+
+    #header li a {
+        font-size: small;
+    }
+}
+
+
+.textRegular { /*The regular text font in the welcome page dialog*/
 
     text-align: center;
     color:white; 
     font-family: 'Century Gothic', Helvetica, sans-serif;
     font-weight: lighter;
-    font-size: medium;
+    font-size: small;
     padding-left: 1dvw;
     padding-right: 1dvw;
 
 
 }
 
+.textList { /*The list of instructions in the welcome page dialog*/
 
-#finishPuzzleMenuItems hr{
-    width: 300px;
+    text-align: left;
+    color:white; 
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 12;
+
 }
 
-.userInput, .controls{
+
+.textList li::marker{ /*The list of instructions in the welcome page dialog*/
+    font-size: 110%;
+    background-color: rgb(0,200,200);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bolder;
+}
+
+#finishPuzzleMenuItems hr{
+    width: 75%;
+}
+
+#welcomePage hr{
+    width:75%;
+}
+
+
+.controls{ /*The controls of the completed puzzle dialog*/
     margin-top: 10%;
-    margin-left: 50%;
-    transform: translate(-50%, -10%);
+    transform: translate(0%, -10%);
     height: auto;
     text-align: center;
     position: relative;
+    align-items: center;
     display: inline-block;
 
 }
 
-.controls #expand_button{
+.userInput{ /*The user input container of the welcome page dialog*/
+    height: auto;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+
+}
+
+
+.controls #expand_button{ /*The expand button of the completed puzzle dialog*/
     padding: 8px 32px;
     margin-right: 7px; 
     color: #333333;
@@ -90,7 +280,21 @@ div#puzzleContainer{
 
 }
 
-.controls #end_session{
+#GO{ /*The GO Button on the starter page*/
+    padding: 8px 32px;
+    color: #333333;
+    background-color: #6dc580;
+    border: 1px solid #4d9c35;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold ;
+    box-shadow: 2px 2px 5px black;
+    cursor: pointer;
+
+}
+
+.controls #end_session{ /*The end session button on the completed puzzle dialog*/
     padding: 8px 32px;
     margin-left: 7px; 
     color: #333333;
@@ -105,7 +309,7 @@ div#puzzleContainer{
 
 }
 
-.controls  #end_session:hover, #expand_button:hover{  
+ #end_session:hover, #expand_button:hover, #GO:hover {  /*The button hover of the completed puzzle dialog*/
     background-color: lightslategray;
     color: white;
     border: 1px solid #dddddd;
@@ -113,18 +317,40 @@ div#puzzleContainer{
 
 
 
-#labelOrient, #labelPrompt{
+label { 
     font-family: 'Century Gothic', Helvetica, sans-serif;
     text-decoration: none;
     font-style: normal;
-    font-weight: 500;
+    font-weight: bold;
     color: white;
-    text-align: right;
     padding-right: 10px;
+    font-size: 14;
+    max-width: 80px;
+    word-wrap: break-word;
+    display: inline-block;
+
 
 }
 
-#textPrompt{
+#labelPrompt{ /*Edits the prompt label of the completed puzzle dialog*/
+    max-width: 200px;
+    word-wrap: normal;
+    margin-right: 2px;
+
+}
+
+
+#promptContainer{
+    margin-left: 15px;
+}
+
+#labelDifficult{
+    padding: 5px; 
+    background-color: rgba(255, 7, 7, 0.4);
+    border-radius: 5px;
+}
+
+#textPrompt{ /*Edits the prompt textbox of the completed puzzle dialog*/
 
     padding-top: 8px; 
     padding-bottom: 8px;
@@ -138,6 +364,57 @@ div#puzzleContainer{
     font-style: normal;
     font-weight: light ;
     box-shadow: 2px 2px 5px rgb(90, 90, 90);
+    margin-top: 2dvh;
+
+}
+
+#textFirstPrompt{ /*Edits the prompt textbox of the welcome page dialog*/
+
+    padding-top: 8px; 
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right:30px;
+    width:25dvw;
+    color: #333333;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: light ;
+    box-shadow: 2px 2px 5px rgb(90, 90, 90);
+
+}
+
+#imageSubject{ 
+
+    padding: 8px 12px; 
+    width:25dvw; 
+    color: #333333;
+    background-color: #eeeeee;
+    border: 3px solid rgba(117, 117, 117, 0.486);
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
+
+
+
+}
+
+#difficulty{
+
+    padding: 8px 12px; 
+    width:25dvw; 
+    color: #333333;
+    background-color: #eeeeee;
+    border: 3px solid rgba(117, 117, 117, 0.486);
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
 
 }
 
@@ -193,6 +470,32 @@ select option:first-of-type{
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+}
+
+#score{
+    position: absolute;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    display:none;
+   
+}
+
+#innerScoreContainer{
+    display: flex; 
+    justify-content: center;
+}
+
+#innerScoreContainer h3{
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    text-decoration: none;
+    font-style: normal;
+    display: block;
+    color: white;
+    text-align: center;
+    padding-right: 14px;
+    text-decoration: none;
+
 }
 
 #header li a:hover {

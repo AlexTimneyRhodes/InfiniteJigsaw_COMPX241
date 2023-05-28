@@ -1,4 +1,6 @@
 import * as expandJigsaw from './jigsaw_expansion.js';
+import * as setup from './setup.js';
+
 
 //Set up global variables 
 let IMAGE=null;
@@ -18,16 +20,258 @@ let OFFSET = [];
 let LAST_EXPANSION = [];
 let COMPLETED_PUZZLE = false; 
 let EXPAND_ORIENTATION = "NULL"; 
-let TEXT_PROMPT = "";
+let NEXT_PROMPT=null;
+let IS_VALID_NEXT_PROMPT = false;
+let VALID_NEXT_PROMPT = ""; 
 var EXPANSION_COUNT = 0; 
+let NEXT_IMAGE_LEFT; 
+let NEXT_IMAGE_RIGHT; 
+let NEXT_IMAGE_TOP; 
+let NEXT_IMAGE_BOTTOM; 
+let DISPLAY_ROUND = null; 
+let [seconds,minutes,hours] = [0,0,0]; 
+let DISPLAY_TIME = null; 
+let timer = null; 
+
+/**
+ * Stop watch function which mimics a stop watch by counting each second and increasing the minutes after hitting 60 seconds and increasing the hours after 60 minutes
+ */
+
+function stopWatch(){
+    seconds++;
+    if(seconds == 60){
+        seconds =0; 
+        minutes++; 
+        if(minutes == 60){
+            minutes = 0; 
+            hours++; 
+        }
+    }
+
+    let h = hours < 10 ? "0" + hours : hours; 
+    let m = minutes < 10 ? "0" + minutes : minutes; 
+    let s = seconds < 10 ? "0" + seconds : seconds; 
+
+    DISPLAY_TIME.innerHTML = h + ":" + m + ":" + s; 
+} 
+
+/**
+ * Starts the timer by setting the interval at which the stop watch method should be called 
+ */
+
+function timeStart(){
+    if(timer !== null){
+        clearInterval(timer); 
+    }
+    timer = setInterval(stopWatch, 1000); 
+
+}
+
+/**
+ * Stops the timer by clearing the interval and stopping the stopwatch function 
+ */
+
+function timeStop(){
+    clearInterval(timer); 
+
+}
 
 
+/**
+ * Fetches the next image AI generated, expanding from the left edge and stores it in the NEXT_IMAGE_LEFT global variable
+ * @param {HTML img Element} img - The previous image of the puzzle
+ * @param {String} prompt - The prompt for the next image
+ * @param {String} orientation - The direction to expand in (LEFT)
+ * @returns from the method
+ */
 
+export async function fetchExtendedImageLeft(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+      
+    NEXT_IMAGE_LEFT = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+            
+            //Set the image returned as the global variable storing the next left image 
+            NEXT_IMAGE_LEFT = document.createElement('img');
+            NEXT_IMAGE_LEFT.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_LEFT");
+                
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
+/**
+ * Fetches the next image AI generated, expanding from the top edge and stores it in the NEXT_IMAGE_TOP global variable
+ * @param {HTML img Element} img - The previous image of the puzzle
+ * @param {String} prompt - The prompt for the next image
+ * @param {String} orientation - The direction to expand in (TOP)
+ * @returns from the method
+ */
+
+export async function fetchExtendedImageTop(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+    
+    NEXT_IMAGE_TOP = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+           
+            //Set the image returned as the global variable storing the next top image 
+            NEXT_IMAGE_TOP = document.createElement('img');
+            NEXT_IMAGE_TOP.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_TOP");
+            
+         
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
+/**
+ * Fetches the next image AI generated, expanding from the right edge and stores it in the NEXT_IMAGE_RIGHT global variable
+ * @param {HTML img Element} img - The previous image of the puzzle
+ * @param {String} prompt - The prompt for the next image
+ * @param {String} orientation - The direction to expand in (RIGHT)
+ * @returns from the method
+ */
+
+export async function fetchExtendedImageRight(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+    
+    NEXT_IMAGE_RIGHT = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+           
+            //Set the image returned as the global variable storing the next right image 
+            NEXT_IMAGE_RIGHT = document.createElement('img');
+            NEXT_IMAGE_RIGHT.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_RIGHT");
+            
+         
+            return; // Return the image path when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
+
+/**
+ * Fetches the next image AI generated, expanding from the bottom edge and stores it in the NEXT_IMAGE_BOTTOM global variable
+ * @param {HTML img Element} img - The previous image of the puzzle
+ * @param {String} prompt - The prompt for the next image
+ * @param {String} orientation - The direction to expand in (BOTTOM)
+ * @returns from the method
+ */
+
+export async function fetchExtendedImageBottom(img,prompt, orientation) {
+    let data = {
+        imagePath: img.src,
+        prompt: prompt,
+        direction: orientation
+    };
+    
+    NEXT_IMAGE_BOTTOM = null; 
+
+    const response = await fetch('/api/extendImage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    data = await response.json();
+
+    const jobId = data.jobId;
+    console.log("job created with ID:"+jobId);
+
+    while (true) {
+        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
+        const statusData = await statusResponse.json();
+        console.log("job status: "+statusData.status);
+        if (statusData.imagePath) {
+           
+            //Set the image returned as the global variable storing the next bottom image 
+            NEXT_IMAGE_BOTTOM = document.createElement('img');
+            NEXT_IMAGE_BOTTOM.src = statusData.imagePath
+            console.log("Image loaded and assigned to NEXT_IMAGE_TOP");
+            
+         
+            return; // Return from method when the job is done
+        }
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
+    }
+}
 
 
 document.addEventListener("DOMContentLoaded", function(){
+    //Displays the timer and gets the completed puzzle dialog element 
     COMPLETE_MENU_ITEMS = document.getElementById("finishPuzzleMenuItems");
-    // COMPLETE_MENU_ITEMS.style.display = "none";
+    document.getElementById('score').style.display = 'block'; 
+    DISPLAY_ROUND = document.getElementById("round"); 
+    DISPLAY_TIME = document.getElementById("timer");
+
     
     CANVAS=document.getElementById("myCanvas"); //Gets the canvas element from the HTML document
     PUZZLE_CONTAINER=document.getElementById("puzzleContainer");
@@ -38,18 +282,34 @@ document.addEventListener("DOMContentLoaded", function(){
     CANVAS.width=PUZZLE_CONTAINER.offsetWidth; //Sets the width and height of canvas to fit the screen
     CANVAS.height=PUZZLE_CONTAINER.offsetHeight; 
 
+    //Creates the image for the first puzzle 
     IMAGE = document.createElement("img");
-    IMAGE.src = "./images/starryNight.png"; //Sources the image 
+    //Get the image path 
+    var imagePath = setup.getCookie("imagePath");
+    IMAGE.src = imagePath; //Sources the image 
+
+    //Gets the prompt entered by the user in the welcome page
+    var prompt = setup.getCookie("firstPrompt"); 
+
+    //Fetches the next images according to the prompt given
+    fetchExtendedImageLeft(IMAGE, prompt, "LEFT");     
+    fetchExtendedImageTop(IMAGE, prompt, "TOP"); 
+    fetchExtendedImageRight(IMAGE, prompt, "RIGHT"); 
+    fetchExtendedImageBottom(IMAGE, prompt, "BOTTOM"); 
 
     //Add the event listener for a completed puzzle 
     ORIENTATION_SELECT = document.getElementsByClassName("orientation").item(0);
     //TEXT_PROMPT = document.getElementById("textPrompt").value;
     EXPAND_BUTTON = document.getElementById("expand_button");
+    NEXT_PROMPT = document.getElementById("textPrompt"); 
     addMenuEventListeners();
     
     //Sets up the drag and drop functions 
     addEventListeners(); 
     OFFSET.push(1);
+
+    //Sets the difficulty level of the puzzle
+    setDifficultyLevel();
     
     IMAGE.onload = function(){ //Once the image is loaded, resize the image and update the canvas 
         window.addEventListener("resize", handleResize);
@@ -57,46 +317,132 @@ document.addEventListener("DOMContentLoaded", function(){
         initialisePieces(SIZE.rows, SIZE.columns); //Initialises the pieces of the puzzle to the default value 
         randomisePieces(0); 
         updateCanvas(); 
+        timeStart(); 
         
     }
 
+       
+
 });
 
+
+/**
+ * Sets the difficulty level depending on what was set in the welcome page 
+ */
+function setDifficultyLevel(){
+
+    var difficultyLevel = setup.getCookie("difficultyLevel"); 
+    switch(difficultyLevel){
+
+        case "EASY":
+            SIZE.rows = 3; 
+            SIZE.columns = 3;
+            break; 
+        case "MEDIUM":
+            SIZE.rows = 5; 
+            SIZE.columns = 5;
+            break; 
+        case "HARD":
+            SIZE.rows = 9; 
+            SIZE.columns = 9;
+            break; 
+        case "INSANE":
+            SIZE.rows = 15; 
+            SIZE.columns = 15;
+            break; 
+        default:
+            SIZE.rows = 3; 
+            SIZE.columns = 3;
+            break;     
+
+    }
+}
+
+
+/**
+ * Adds all the completed puzzle dialog events
+ */
 function addMenuEventListeners(){
     ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
     EXPAND_BUTTON.addEventListener("click", expandCompletedPuzzle);
 }
 
+
+/**
+ * Adds all the event listeners that deals with the mouse or touch events
+ */
 function addEventListeners(){
     CANVAS.addEventListener("mousedown", onMouseDown);
     CANVAS.addEventListener("mousemove", onMouseMove);
     CANVAS.addEventListener("mouseup", onMouseUp);
-    // PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
-
+    CANVAS.addEventListener("touchstart", onTouchStart);
+    CANVAS.addEventListener("touchmove", onTouchMove);
+    CANVAS.addEventListener("touchend", onTouchEnd);
 
 }
 
+/**
+ * Returns the x and y locations of the touch event
+ * @param {object} evt - The touch event that triggered the start touch  
+ */
+
+function onTouchStart(evt){
+    let loc = {x: evt.touches[0].clientX, y:evt.touches[0].clientY};
+    onMouseDown(loc, true, evt);
+}
+
+/**
+ * Returns the x and y locations of the touch event
+ * @param {object} evt - The touch event that triggered the touch move
+ */
+function onTouchMove(evt){
+    let loc = {x: evt.touches[0].clientX, y:evt.touches[0].clientY};
+    onMouseMove(loc, true, evt);
+}
+
+/**
+ * Touch event using the mouse up event
+ */
+function onTouchEnd(){
+    onMouseUp();
+}
+
+/**
+ * Removes the event listeners to prevent any movement of the puzzle when completing the dialog
+ */
 function removeEventListeners(){
     CANVAS.removeEventListener("mousedown", onMouseDown);
     CANVAS.removeEventListener("mousemove", onMouseMove);
     CANVAS.removeEventListener("mouseup", onMouseUp);
-    //PUZZLE_CONTAINER.addEventListener("scroll", handleScroll);
+    CANVAS.removeEventListener("touchstart", onTouchStart);
+    CANVAS.removeEventListener("touchmove", onTouchMove);
+    CANVAS.removeEventListener("touchend", onTouchEnd);
+
 }
 
 
 /**
  * Calculates the proper mouse position in respect to the scroll of the window and the size of the puzzle container 
- * @param {The mouse down, up or move event} evt 
- * @returns 
+ * @param {object} evt - The mouse or touch event
+ * @returns the actual x and y locations of the cursors
  */
-function calculateMousePosition(evt){
+function calculateMousePosition(evt, touch){
 
+    var mouseX, mouseY; 
     var rect = PUZZLE_CONTAINER.getBoundingClientRect(); 
     var scrollLeft = PUZZLE_CONTAINER.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft;
     var scrollTop = PUZZLE_CONTAINER.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 
-    var mouseX = evt.clientX - rect.x + scrollLeft; 
-    var mouseY = evt.clientY - rect.y + scrollTop; 
+    if(touch == true){
+
+        mouseX = evt.x - rect.x + scrollLeft; 
+        mouseY = evt.y - rect.y + scrollTop; 
+    }
+    else{
+        
+        mouseX = evt.clientX - rect.x + scrollLeft; 
+        mouseY = evt.clientY - rect.y + scrollTop; 
+    }
 
     return {
         mouseX, mouseY
@@ -104,13 +450,25 @@ function calculateMousePosition(evt){
 
 }
 
-function onMouseDown(evt){
 
-    var mouseX = calculateMousePosition(evt).mouseX; 
-    var mouseY = calculateMousePosition(evt).mouseY; 
+/**
+ * 
+ * @param {object} evt - the mouse or touch event (if touch event, only returns the x and y values )
+ * @param {boolean} touch - whether the event is a touch event or a mouse event 
+ * @param {object} touchEvent - The actual touch event object (to prevent default action)
+ */
+function onMouseDown(evt, touch, touchEvent){
+
+
+    var mouseX = calculateMousePosition(evt, touch).mouseX; 
+    var mouseY = calculateMousePosition(evt, touch).mouseY; 
+    
 
     SELECTED_NODE = getPressedPiece(mouseX, mouseY); 
     if(SELECTED_NODE != null){
+        if(touch == true){
+            touchEvent.preventDefault(); 
+        }
         PUZZLE_CONTAINER.style.cursor = 'grabbing'; 
         //Make sure top most piece is always grabbed first
         const index = NODE_PIECES.indexOf(SELECTED_NODE);
@@ -131,10 +489,17 @@ function onMouseDown(evt){
     updateCanvas();
 }
 
-function onMouseMove(evt){
+/**
+ * If a piece is selected, the piece is moved to where the cursor is 
+ * @param {object} evt - the touch or mouse event that triggered the mouse move event
+ * @param {boolean} touch - whether the event was touch (true) or a mouse event (false/undefined)
+ */
 
-    var mouseX = calculateMousePosition(evt).mouseX; 
-    var mouseY = calculateMousePosition(evt).mouseY; 
+function onMouseMove(evt, touch){
+
+    
+    var mouseX = calculateMousePosition(evt, touch).mouseX; 
+    var mouseY = calculateMousePosition(evt, touch).mouseY; 
 
     if(getPressedPiece(mouseX,mouseY) != null){
         PUZZLE_CONTAINER.style.cursor = 'grab'; 
@@ -203,13 +568,12 @@ function traverseNodes(rootNode){
 
 /**
  * Checks whether the node is close to any of its corresponding edge ids, if so then the selected piece will snap to the edge of the other piece 
- * @param {The mouse up event} evt 
  */
 
-function onMouseUp(evt){
+function onMouseUp(){
 
-    var mouseX = calculateMousePosition(evt).mouseX; 
-    var mouseY = calculateMousePosition(evt).mouseY; 
+    // var mouseX = calculateMousePosition(evt).mouseX; 
+    // var mouseY = calculateMousePosition(evt).mouseY; 
 
     if(SELECTED_NODE != null){
 
@@ -391,33 +755,34 @@ function onMouseUp(evt){
 
         //Expand the array if the connected array of the selected piece is has the total number of nodes in the puzzle 
         if(CONNECTED_ARRAY.length == NODE_PIECES.length /*&& NODE_PIECES.length == (SIZE.columns * SIZE.rows * RIGHT_EXPANSION_COUNT)*/){
-            
+            timeStop(); 
+
+            //Sets the completed puzzle to true and displays the completed puzzle dialog 
             COMPLETED_PUZZLE = true; 
             COMPLETE_MENU_ITEMS.style.display = "block";
-            var textBox = document.getElementById("textPrompt");
-            textBox.value = "";
+            
+            //Resets the edge/orientations comboBox's first option to the 'select edge' 
             ORIENTATION_SELECT.selectedIndex = 0; 
             removeEventListeners(); 
 
-            
+            //Checks if the images are available yet 
+            checkLeftImage(); 
+            checkTopImage();
+            checkRightImage(); 
+            checkBottomImage(); 
         }
 
     }
     //Unselect the node and update canvas to reflect change
     SELECTED_NODE = null; 
-    if(getPressedPiece(mouseX,mouseY) != null){
-        PUZZLE_CONTAINER.style.cursor = 'grab'; 
-    }
-    else{
-        PUZZLE_CONTAINER.style.cursor = 'default'; 
-    }    
+   
     updateCanvas(); 
     
 }
 
 /**
  * Gets the piece that has been selected by the mouse 
- * @param {The location of the mouse cursor} loc 
+ * @param {event} loc - The location of the mouse cursor 
  * @returns The node that has been selected or null
  */
 function getPressedPiece(mouseX, mouseY){
@@ -444,8 +809,8 @@ export function randomisePieces(startPiece){
    
     for(let i=startPiece; i< NODE_PIECES.length; i++){
         let local = {
-            x: Math.random() * (PUZZLE_CONTAINER.offsetWidth - (NODE_PIECES[i].piece.width + NODE_PIECES[i].piece.width*0.1)) , 
-            y:Math.random() * (PUZZLE_CONTAINER.offsetHeight - (NODE_PIECES[i].piece.height+ NODE_PIECES[i].piece.height*0.1))
+            x: Math.random() * (PUZZLE_CONTAINER.offsetWidth - (NODE_PIECES[i].piece.width + NODE_PIECES[i].piece.width*1.2)) , 
+            y:Math.random() * (PUZZLE_CONTAINER.offsetHeight - (NODE_PIECES[i].piece.height+ NODE_PIECES[i].piece.height*1.5))
         }; 
         NODE_PIECES[i].piece.x = local.x;
         NODE_PIECES[i].piece.y = local.y; 
@@ -494,8 +859,8 @@ export function handleResize(scaler){
         );
     SIZE.width = resizer*IMAGE.width;
     SIZE.height = resizer*IMAGE.height; 
-    SIZE.x=window.innerWidth/2-SIZE.width/2;
-    SIZE.y=window.innerHeight/2-(SIZE.height/6)*7;
+    SIZE.x=window.innerWidth/2-SIZE.width;
+    SIZE.y=window.innerHeight/2-SIZE.height;
 
     if(NODE_PIECES.length > 0){
         updateCanvas();
@@ -516,8 +881,8 @@ export function resizePuzzlePieces(){
 
 /**
  * Initialises the pieces of the puzzle 
- * @param {The number of rows in the puzzle} rows 
- * @param {The number of columns in the puzzle} cols 
+ * @param {integer} rows - The number of rows in the puzzle
+ * @param {integer} cols - The number of columns in the puzzle
  */
 function initialisePieces(rows, cols){
     NODE_PIECES=[];
@@ -592,20 +957,47 @@ function initialisePieces(rows, cols){
  */
 export function puzzleExpansionInformation(){
 
+    //Triple check if the image has been processed 
+    if(NEXT_IMAGE_LEFT === null || NEXT_IMAGE_RIGHT === null || NEXT_IMAGE_TOP === null || NEXT_IMAGE_LEFT === null){
+        checkLeftImage(); 
+        checkTopImage();
+        checkRightImage(); 
+        checkBottomImage(); 
+    }
+
+    var rows = SIZE.rows; 
+    var columns = SIZE.columns; 
+    var leftImage = document.createElement("img");
+    leftImage.src = NEXT_IMAGE_LEFT.src;  
+
+    var rightImage = document.createElement("img");
+    rightImage.src = NEXT_IMAGE_RIGHT.src; 
+
+    var bottomImage = document.createElement("img");
+    bottomImage.src = NEXT_IMAGE_BOTTOM.src; 
+
+    var topImage = document.createElement("img");
+    topImage.src = NEXT_IMAGE_TOP.src; 
+
+    var expansionCount  = EXPANSION_COUNT; 
     return{
 
         ORIGINAL_NODE_PIECES_ORDER, 
         NODE_PIECES,
-        SIZE, 
+        rows,
+        columns, 
         OFFSET, 
         SCALER, 
-        EXPANSION_COUNT,
+        expansionCount,
         LAST_EXPANSION,
-        EXPAND_ORIENTATION
+        EXPAND_ORIENTATION,
+        leftImage,
+        rightImage,
+        bottomImage, 
+        topImage
     }
     
 }
-
 
 
 /**
@@ -616,8 +1008,8 @@ export class Piece{
 
     /**
      * Initialises a piece object, taking in a row index and column index 
-     * @param {The row index of the piece} rowIndex 
-     * @param {The column index of the piece} colIndex 
+     * @param {integer} rowIndex - The row index of the piece
+     * @param {integer} colIndex - The column index of the piece
      */
     constructor(rowIndex, colIndex){
         this.rowIndex=rowIndex;
@@ -633,6 +1025,9 @@ export class Piece{
 
 }
 
+/**
+ * A node class that contains a piece object, holding information on the left edge, right edge, bottom edge and top edge and whether those edges are connected
+ */
 export class Node{
 
     constructor(piece, id_T, id_L, id_R, id_B, image){
@@ -650,7 +1045,8 @@ export class Node{
         this.rightConnected = false; 
         this.image = image; 
 
-        //Need to store the references to the top, right, left, and bottom pieces
+        //Need to store the references to the top, right, left, and bottom pieces 
+        //NOTE THESE ARE NODE OBJECTS NOT PIECE OBJECTS (need to be refactored)
         this.topPiece = null; 
         this.bottomPiece = null; 
         this.rightPiece = null; 
@@ -674,7 +1070,7 @@ export class Node{
     
     /**
      * Draws the single piece using its fixed width, height, and at its x and y positions
-     * @param {The context used to draw the pieces} context 
+     * @param {object} context - The context used to draw the pieces
      */
     draw(context, size){
         context.beginPath();
@@ -804,6 +1200,10 @@ class Edge{
 
 }
 
+/**
+ * Checks if the expansion direction is valid 
+ */
+
 function checkExpansionValidity(){
     //Get the value from the select element
     let orientation = ORIENTATION_SELECT.value; 
@@ -851,10 +1251,24 @@ function checkExpansionValidity(){
 }
 
 function expandCompletedPuzzle(){
+    
+    //Double check if the image has been processed 
+    if(NEXT_IMAGE_LEFT === null || NEXT_IMAGE_RIGHT === null || NEXT_IMAGE_TOP === null || NEXT_IMAGE_LEFT === null){
+        checkLeftImage(); 
+        checkTopImage();
+        checkRightImage(); 
+        checkBottomImage(); 
+    }
 
+
+    getNextPrompt(); 
     if(COMPLETED_PUZZLE == false){
         alert("Puzzle must be completed before expansion"); 
-    }else{
+    }
+    else if(IS_VALID_NEXT_PROMPT == false){
+        alert("You must enter a valid prompt"); 
+    }
+    else{
 
         //Get the value of the expansion orientation 
         if(EXPAND_ORIENTATION != "NULL"){
@@ -874,24 +1288,54 @@ function expandCompletedPuzzle(){
             
 
             }
+            else if(EXPAND_ORIENTATION == "RIGHT"){
+                
+                CANVAS.width *= 1.5; 
+               
+                for(let i = 0; i < NODE_PIECES.length; i++){
+                    //Increase the y position of each piece by 2
+                    NODE_PIECES[i].piece.x -= 300;
+                    NODE_PIECES[i].updateEdgeValues(); 
+    
+                }
 
-            //Store the orientation 
-            var lastPieceIndex = ORIGINAL_NODE_PIECES_ORDER.length - 1; 
-            var orientation = EXPAND_ORIENTATION; 
+            }else if(EXPAND_ORIENTATION == "LEFT"){
 
-            var image = document.createElement("img");
+                CANVAS.width *= 1.5; 
+               
+                for(let i = 0; i < NODE_PIECES.length; i++){
+                    //Increase the y position of each piece by 2
+                    NODE_PIECES[i].piece.x += 300;
+                    NODE_PIECES[i].updateEdgeValues(); 
+    
+                }
 
-            //var prompt = TEXT_PROMPT.value;
-            image.src = ORIGINAL_NODE_PIECES_ORDER[lastPieceIndex].image.src;
-
-            image.onload = function(){
-                expandJigsaw.expandPuzzle(image,"", orientation); 
             }
+
+            //Store the orientation/direction of expansion 
+            var orientation = EXPAND_ORIENTATION; 
+            
+            //Expand the jigsaw in the correct direction 
+            expandJigsaw.expandPuzzle(orientation); 
+            
+            //Resets the expansion direction, increases the expansion count and removes the completed puzzle dialog 
             LAST_EXPANSION.length = 0; 
             LAST_EXPANSION.push(orientation); 
             EXPAND_ORIENTATION = "NULL"; 
             EXPANSION_COUNT++; 
-            COMPLETE_MENU_ITEMS.style.display = "none";
+            COMPLETE_MENU_ITEMS.style.display = "none"; 
+
+            //Gets the image of the previous image for the AI image generation 
+            var lastPieceIndex = ORIGINAL_NODE_PIECES_ORDER.length - 1; 
+            var prev_image = document.createElement("img");
+            prev_image.src = ORIGINAL_NODE_PIECES_ORDER[lastPieceIndex].image.src;
+            
+
+            //Fetches the next images depending on the prompt (in all four directions)
+            fetchExtendedImageLeft(prev_image, VALID_NEXT_PROMPT, "LEFT");     
+            fetchExtendedImageTop(prev_image, VALID_NEXT_PROMPT, "TOP"); 
+            fetchExtendedImageRight(prev_image, VALID_NEXT_PROMPT, "RIGHT"); 
+            fetchExtendedImageBottom(prev_image, VALID_NEXT_PROMPT, "BOTTOM"); 
 
 
 
@@ -901,13 +1345,165 @@ function expandCompletedPuzzle(){
             return; 
         }
 
+        //Set the completed puzzle to false, adds the event listeners again, updates canvas 
         COMPLETED_PUZZLE = false; 
         addEventListeners()
         updateCanvas();
 
+        //Increase round number and start timer 
+        DISPLAY_ROUND.innerHTML = EXPANSION_COUNT + 1; 
+        timeStart(); 
 
     }
 
+}
+
+/**
+ * Gets the next prompt after a puzzle has been completed 
+ */
+
+function getNextPrompt(){
+    var textPrompt = NEXT_PROMPT.value; 
+    var placeholder = NEXT_PROMPT.placeholder; 
+
+    if(textPrompt == placeholder || textPrompt == ""){ //If the prompt is not an empty string or the placeholder
+        IS_VALID_NEXT_PROMPT = false; 
+    }else{
+        VALID_NEXT_PROMPT = textPrompt; //Set the next prompt as the valid prompt to use 
+        IS_VALID_NEXT_PROMPT = true; 
+    }
+
+}
+
+/**
+ * Periodically checks if the next left image being generated is not null (and can be used)
+ * @returns True if the next left image is no longer null
+ */
+
+async function waitForLeftImage(){
+    
+    while(true){
+        if(NEXT_IMAGE_BOTTOM !== null){
+            return true; 
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
+    }
+}
+
+/**
+ * Periodically checks if the next right image being generated is not null (and can be used)
+ * @returns True if the next right image is no longer null
+ */
 
 
+async function waitForRightImage(){
+
+    while(true){
+        if(NEXT_IMAGE_BOTTOM !== null){
+            return true; 
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
+    }
+
+}
+
+/**
+ * Periodically checks if the next top image being generated is not null (and can be used)
+ * @returns True if the next top image is no longer null
+ */
+
+async function waitForTopImage(){
+
+    while(true){
+        if(NEXT_IMAGE_TOP !== null){
+            return true; 
+        }
+       await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
+    }
+
+}
+
+/**
+ * Periodically checks if the next bottom image being generated is not null (and can be used)
+ * @returns True if the next bottom image is no longer null
+ */
+
+
+async function waitForBottomImage(){
+
+   while(true){
+    if(NEXT_IMAGE_BOTTOM !== null){
+        return true; 
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 10 seconds before the next check
+   }
+
+}
+
+
+/**
+ * Checks the 'wait for left image' promise and waits for it to be resolved -> then removes the overlay if the other three AI generated images are no longer null
+ * @returns True if the left image is no longer null 
+ */
+
+
+function checkLeftImage(){
+    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    return waitForLeftImage().then((notNull) => {
+        console.log("LEFT IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }    
+        return notNull; 
+    });
+}
+
+/**
+ * Checks the 'wait for right image' promise and waits for it to be resolved -> then removes the overlay if the other three AI generated images are no longer null
+ * @returns True if the right image is no longer null 
+ */
+
+
+function checkRightImage(){
+    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    return waitForRightImage().then((notNull) => {
+        console.log("RIGHT IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_LEFT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }        
+        return notNull; 
+    });
+}
+
+
+/**
+ * Checks the 'wait for bottom image' promise and waits for it to be resolved -> then removes the overlay if the other three AI generated images are no longer null
+ * @returns True if the bottom image is no longer null 
+ */
+
+function checkBottomImage(){
+    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    return waitForBottomImage().then((notNull) => {
+        console.log("BOTTOM IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }
+        return notNull; 
+    });
+}
+
+/**
+ * Checks the 'wait for top image' promise and waits for it to be resolved -> then removes the overlay if the other three AI generated images are no longer null
+ * @returns True if the top image is no longer null 
+ */
+
+function checkTopImage(){
+    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    return waitForTopImage().then((notNull) => {
+        console.log("TOP IMAGE IS AVAILABLE : " + notNull); 
+        if(NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
+            document.getElementById('overlay').style.display = 'none';
+        }
+        return notNull;
+    });
 }

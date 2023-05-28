@@ -1,45 +1,12 @@
-//const jigsaw = require('./jigsaw'); 
 import * as jigsaw from './jigsaw.js';
 
+/**
+ * Expands the puzzle in the given dfirection by creating a new set of nodes that connect to the most recently completed puzzle
+ * @param {String} orientation - The direction in which the puzzle should expand
+ * @returns true as the puzzle has been completed
+ */
 
-async function fetchExtendedImage(img,prompt, orientation) {
-    let data = {
-        imagePath: img.src,
-        prompt: prompt,
-        direction: orientation
-    };
-
-    
-let image;
-      
-
-    const response = await fetch('/api/extendImage', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-    data = await response.json();
-
-    const jobId = data.jobId;
-    console.log("job created with ID:"+jobId);
-
-    while (true) {
-        const statusResponse = await fetch(`/api/checkJobStatus/${jobId}`);
-        const statusData = await statusResponse.json();
-        console.log("job status: "+statusData.status);
-        if (statusData.imagePath) {
-            image = document.createElement('img');
-            image.src = statusData.imagePath
-            return image; // Return the image path when the job is done
-        }
-        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for 10 seconds before the next check
-    }
-}
-
-
-export function expandPuzzle(img, prompt, orientation){
+export function expandPuzzle(orientation){
     
     //Get the original puzzle information 
     var originalPuzzle = jigsaw.puzzleExpansionInformation(); 
@@ -47,8 +14,8 @@ export function expandPuzzle(img, prompt, orientation){
     var node_pieces = originalPuzzle.NODE_PIECES; 
 
     //Get the number of rows and columns 
-    var numRows = originalPuzzle.SIZE.rows; 
-    var numColumns = originalPuzzle.SIZE.columns; 
+    var numRows = originalPuzzle.rows; 
+    var numColumns = originalPuzzle.columns; 
 
     //Get the index of the next puzzle node 
     var pieceIndex = node_pieces.length;    
@@ -56,40 +23,26 @@ export function expandPuzzle(img, prompt, orientation){
     //Get the offset for the puzzle edge IDs
     var offset = originalPuzzle.OFFSET[0];  
     //Reset the offset array 
-    originalPuzzle.OFFSET.length = 0;  
-    //check if the supplied prompt is valid
-    //if it is not valid, pass a default prompt
-    if(prompt == null || prompt == undefined || prompt == ""){
-        prompt = "artistic image of a landscape";
-    }
-
-// Show overlay
-document.getElementById('overlay').style.display = 'block';
-
-        
-
-    return fetchExtendedImage(img,prompt, orientation).then((image) => {
-        console.log("expand puzzle to the "+orientation+" of the original puzzle")
-console.log("image path: "+image.src);
-console.log("image" + image);
-    // Hide overlay when done
-    document.getElementById('overlay').style.display = 'none';
-
-
+    originalPuzzle.OFFSET.length = 0; 
+    var image;
 
     //Check the orientation that the use asked for and expand accordingly 
     if(orientation == "LEFT"){
+        image = originalPuzzle.leftImage; 
         createLeftPuzzleNodes(original_node_pieces, node_pieces,numRows,numColumns,pieceIndex,offset, image);
     }
     else if(orientation == "RIGHT"){
+        image = originalPuzzle.rightImage; 
         createRightPuzzleNodes(original_node_pieces, node_pieces,numRows,numColumns,pieceIndex,offset, image);
 
     }
     else if(orientation == "TOP"){
+        image = originalPuzzle.topImage;
         createTopPuzzleNodes(original_node_pieces, node_pieces,numRows,numColumns,pieceIndex,offset, image);
 
     }
     else if(orientation == "BOTTOM"){
+        image = originalPuzzle.bottomImage; 
         createBottomPuzzleNodes(original_node_pieces, node_pieces,numRows,numColumns,pieceIndex,offset, image);
 
     }
@@ -98,15 +51,6 @@ console.log("image" + image);
     return true;   
 
     
-
-})
-.catch((error) => {
-    
-    // Hide overlay in case of error
-    document.getElementById('overlay').style.display = 'none';
-
-    console.error('Error:', error);
-});
 }
 
 
@@ -114,14 +58,15 @@ console.log("image" + image);
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
+
 
 function createBottomPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
 
@@ -196,13 +141,13 @@ function createBottomPuzzleNodes(original_node_pieces,node_pieces, numRows, numC
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
 
 function createRightPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
@@ -277,14 +222,15 @@ function createRightPuzzleNodes(original_node_pieces,node_pieces, numRows, numCo
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
+
 
 function createLeftPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
 
@@ -379,13 +325,13 @@ function createLeftPuzzleNodes(original_node_pieces,node_pieces, numRows, numCol
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
 
 function createTopPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
