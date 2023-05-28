@@ -129,7 +129,7 @@ async function checkPrompt(prompt) {
 
   //check the output of the moderation API
   //return the 'flagged' property of the output
-  return response.data.output[0].data.flagged;
+  return response.data.results[0].flagged;    
 
   
 }
