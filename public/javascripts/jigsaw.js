@@ -458,7 +458,10 @@ function calculateMousePosition(evt, touch){
  * @param {object} touchEvent - The actual touch event object (to prevent default action)
  */
 function onMouseDown(evt, touch, touchEvent){
-
+    //Checks if the images are there and if they are then remove the overlay 
+    if(NEXT_IMAGE_LEFT !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_TOP !== null){
+        document.getElementById('overlay').style.display = 'none';
+    }
 
     var mouseX = calculateMousePosition(evt, touch).mouseX; 
     var mouseY = calculateMousePosition(evt, touch).mouseY; 
