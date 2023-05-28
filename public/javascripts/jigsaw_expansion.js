@@ -1,5 +1,11 @@
 import * as jigsaw from './jigsaw.js';
 
+/**
+ * Expands the puzzle in the given dfirection by creating a new set of nodes that connect to the most recently completed puzzle
+ * @param {String} orientation - The direction in which the puzzle should expand
+ * @returns true as the puzzle has been completed
+ */
+
 export function expandPuzzle(orientation){
     
     //Get the original puzzle information 
@@ -52,14 +58,15 @@ export function expandPuzzle(orientation){
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
+
 
 function createBottomPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
 
@@ -134,13 +141,13 @@ function createBottomPuzzleNodes(original_node_pieces,node_pieces, numRows, numC
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
 
 function createRightPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
@@ -215,14 +222,15 @@ function createRightPuzzleNodes(original_node_pieces,node_pieces, numRows, numCo
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
+
 
 function createLeftPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){
 
@@ -317,13 +325,13 @@ function createLeftPuzzleNodes(original_node_pieces,node_pieces, numRows, numCol
 
 /**
  * Creates a new set of nodes which connect to the original puzzle pieces 
- * @param {The array containing the original order of the piece nodes} original_node_pieces 
- * @param {Stores the reference to the nodes used in the canvas} node_pieces 
- * @param {The total number of rows of the puzzle} numRows 
+ * @param {Array} original_node_pieces - The array containing the original order of the piece node
+ * @param {Array} node_pieces - Stores the reference to the nodes used in the canvas
+ * @param {integer} numRows - The number of columns of the next puzzle
  * @param {The total number of columns of the puzzle} numColumns 
- * @param {The index of the first piece in the new puzzle} pieceIndex 
- * @param {The offset for the calculation of the EDGE IDs} offset 
- * @param {The image of the new puzzle} image 
+ * @param {integer} pieceIndex - The index of the first piece in the new puzzle
+ * @param {integer} offset - The offset for the calculation of the EDGE IDs
+ * @param {HTML img Object} image - The image of the new puzzle
  */
 
 function createTopPuzzleNodes(original_node_pieces,node_pieces, numRows, numColumns, pieceIndex, offset, image){

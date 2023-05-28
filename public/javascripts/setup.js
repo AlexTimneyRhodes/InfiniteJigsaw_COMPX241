@@ -1,4 +1,4 @@
-
+//Set global variables
 var DIFFICULTY_SELECT=null; 
 var GO=null; 
 var DIFFICULTY_LEVEL="NULL"; 
@@ -8,19 +8,20 @@ var FIRST_PROMPT_INPUT=null;
 var VALID_FIRST_PROMPT;
 var IS_VALID_PROMPT = false;  
 var SET_IMAGE = false; 
-var IMAGE_SUBJECT = "NULL";
 var IMAGE_PATH = "NULL"; 
 
 
+//Gets the necessary elements from the doucment
 GO = document.getElementById("GO"); 
-//Get the image subject combobox 
 IMAGE_SELECT = document.getElementById("imageSubject"); 
 DIFFICULTY_SELECT = document.getElementById("difficulty"); 
 FIRST_PROMPT_INPUT = document.getElementById("textFirstPrompt"); 
-addEventListeners(); 
+addEventListeners(); //Adds the event listeners to the document
 
 
-
+/**
+ * Adds the event listeners if the element exist on the page
+ */
 
 function addEventListeners(){
 
@@ -31,6 +32,10 @@ function addEventListeners(){
     }
 
 }
+
+/**
+ * Checks if a difficulty level has been selected and sets the cookie to store the difficulty level if it has been selected
+ */
 
 function selectDifficulty(){
 
@@ -63,6 +68,9 @@ function selectDifficulty(){
 
 };
 
+/**
+ * Checks if a prompt has been entered and sets the cookie to store the first prompt if it is not an empty string 
+ */
 
 function getPrompt(){
     var textPrompt = FIRST_PROMPT_INPUT.value; 
@@ -78,6 +86,9 @@ function getPrompt(){
 
 }
 
+/**
+ * Gets the base image for the first puzzle and stores the image path as a cookie 
+ */
 
 function selectImage(){
     SET_IMAGE = false; 
@@ -101,6 +112,9 @@ function selectImage(){
 }; 
 
 
+/**
+ * Navigates to the puzzle page if all input fields have been completed and are valid 
+ */
 function goToPuzzle(){
 
     getPrompt(); 
@@ -121,13 +135,12 @@ function goToPuzzle(){
 
 };
 
-export function getDifficulty(){
-    var difficultyLevel = DIFFICULTY_LEVEL; 
-    return{
-        difficultyLevel
-    }
-
-};
+/**
+ * Creates a cookie to be stored and used in other pages 
+ * @param {string} name - The name to identify the cookie
+ * @param {string} value - The value stored in the cookie
+ * @param {integer} daysToLive - The expiration date of the cookie
+ */
 
 function setCookie(name, value, daysToLive){
     const date = new Date(); 
@@ -137,6 +150,11 @@ function setCookie(name, value, daysToLive){
 };
 
 
+/**
+ * Gets the value of the cookie given a valid cookie name
+ * @param {string} name - the name of the cookie  
+ * @returns - the value stored in the cookie
+ */
 export function getCookie(name){
     const cDecoded = decodeURIComponent(document.cookie); 
     const cArray = cDecoded.split("; "); 
