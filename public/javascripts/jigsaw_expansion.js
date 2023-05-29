@@ -6,8 +6,8 @@ import * as jigsaw from './jigsaw.js';
  * @returns true as the puzzle has been completed
  */
 
+
 export function expandPuzzle(orientation){
-    
     //Get the original puzzle information 
     var originalPuzzle = jigsaw.puzzleExpansionInformation(); 
     var original_node_pieces = originalPuzzle.ORIGINAL_NODE_PIECES_ORDER; 

@@ -9,6 +9,7 @@ let CONTEXT=null;
 let PUZZLE_CONTAINER=null; 
 let ORIENTATION_SELECT=null; 
 let EXPAND_BUTTON=null;
+let EXPORTPUZZLE_BUTTON=null;
 let COMPLETE_MENU_ITEMS=null; 
 let SCALER=0.6; 
 export let SIZE={x:0,y:0,width:0,height:0, rows:3, columns:3};
@@ -299,9 +300,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //Add the event listener for a completed puzzle 
     ORIENTATION_SELECT = document.getElementsByClassName("orientation").item(0);
-    //TEXT_PROMPT = document.getElementById("textPrompt").value;
     EXPAND_BUTTON = document.getElementById("expand_button");
     NEXT_PROMPT = document.getElementById("textPrompt"); 
+    EXPORTPUZZLE_BUTTON = document.getElementById("exportPuzzle_Button");
     addMenuEventListeners();
     
     //Sets up the drag and drop functions 
@@ -365,6 +366,8 @@ function setDifficultyLevel(){
 function addMenuEventListeners(){
     ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
     EXPAND_BUTTON.addEventListener("click", expandCompletedPuzzle);
+    EXPORTPUZZLE_BUTTON.addEventListener("click", exportCanvas);
+
 }
 
 
@@ -1510,3 +1513,59 @@ function checkTopImage(){
         return notNull;
     });
 }
+
+// Function to export the canvas and save it as an image
+function exportCanvas() {
+    // Get the canvas element
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext('2d');
+    
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height),
+        l = imageData.width, t = imageData.height, r = 0, b = 0,
+        data = imageData.data;
+
+    for (var i = 0; i < data.length; i += 4) {
+        if (data[i+3] !== 0) {
+            var x = (i / 4) % imageData.width,
+                y = Math.floor((i / 4) / imageData.width);
+                
+            if (x < l) l = x;
+            if (x > r) r = x;
+            if (y < t) t = y;
+            if (y > b) b = y;
+        }
+    }
+
+    var cropped = ctx.getImageData(l, t, r-l+1, b-t+1);
+
+    // Create a new canvas and draw the cropped image on it
+    var newCanvas = document.createElement('canvas');
+    newCanvas.width = cropped.width;
+    newCanvas.height = cropped.height;
+
+    newCanvas.getContext('2d').putImageData(cropped, 0, 0);
+
+    // Create an image
+    var image = newCanvas.toDataURL("image/png", 1.0);
+
+    // Create a link element
+    var link = document.createElement("a");
+
+    // Set the href attribute of the link element to the image
+    link.href = image;
+
+    // Set the download attribute of the link element to the image
+    link.download = "jigsaw.png";
+
+    // Append the link to the body (this is required for Firefox)
+    document.body.appendChild(link);
+
+    // Click the link element
+    link.click();
+
+    // Cleanup the DOM
+    document.body.removeChild(link);
+}
+
+
+

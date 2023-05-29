@@ -2,6 +2,7 @@
   <ul>
     <li><a class="active" href="/welcome">Puzzle</a></li>
     <li><a href="/leaderboard">Leaderboard</a></li>
+    <li><a href="#" id="about-btn">About</a></li>
     <li style="float:right"><a href="/register">Register</a></li>
     <li style="float:right"><a href="/login">Login</a></li>
   </ul>
@@ -14,7 +15,38 @@
 
       <h3>|  </h3>
       <h3>ROUND:</h3>
-      <h3 id="round">1</h3>
+      <h3 id="round">1</h3> 
     </div>
   </div>
 </div>
+</div>
+
+<div id="about-overlay">
+  <div class="about-section">
+    <h1>Welcome to the digital playground of three intrepid explorers from the University of Waikato</h1>
+    <p>We've embarked on a quest to conquer the infinite realms of technology. This is the live version of our group project, "Infinite Jigsaw", a testament to our collective creativity, technical prowess, and caffeine-induced coding marathons.</p>
+    <h2>Meet the team:</h2>
+    <ul>
+        <li>
+            <a href="https://github.com/AlexTimneyRhodes">Alex Rhodes</a>: The linchpin in integrating the OpenAI API, Alex has been instrumental in enabling our Infinite Jigsaw project to expand seamlessly and infinitely. His work ensures that the puzzle's borders extend beautifully, truly embodying the concept of an infinite jigsaw.
+        </li>
+        <li>
+            <a href="https://github.com/RafeeaSiddika">Rafeea Siddika</a>: The architect of our jigsaw website and its features, Rafeea has been the driving force behind our user-friendly interface. She's the one who makes sure that our project doesn't just work well, but looks good doing it.
+        </li>
+        <li>
+            <a href="https://github.com/MahakiLeach">Mahaki Leach</a>: The guardian of our database, Mahaki has been responsible for implementing and maintaining the backbone of our project. He's the one who ensures that every piece of the jigsaw is in its right place.
+        </li>
+    </ul>
+    <p>Together, we've pieced together this infinite jigsaw, and we hope you enjoy exploring it as much as we enjoyed creating it. So, dive in, and let the adventure begin!</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('about-btn').addEventListener('click', function() {
+    document.getElementById('about-overlay').style.display = 'block';
+  });
+
+  document.getElementById('about-overlay').addEventListener('click', function() {
+    this.style.display = 'none';
+  });
+</script>
