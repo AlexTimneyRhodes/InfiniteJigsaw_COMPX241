@@ -33,7 +33,7 @@ let DISPLAY_ROUND = null;
 let [seconds,minutes,hours] = [0,0,0]; 
 let DISPLAY_TIME = null; 
 let timer = null; 
-
+let LOADING_SCREEN = null; 
 /**
  * Stop watch function which mimics a stop watch by counting each second and increasing the minutes after hitting 60 seconds and increasing the hours after 60 minutes
  */
@@ -269,6 +269,7 @@ export async function fetchExtendedImageBottom(img,prompt, orientation) {
 document.addEventListener("DOMContentLoaded", function(){
     //Displays the timer and gets the completed puzzle dialog element 
     COMPLETE_MENU_ITEMS = document.getElementById("finishPuzzleMenuItems");
+    LOADING_SCREEN = document.getElementById('overlay'); 
     document.getElementById('score').style.display = 'block'; 
     DISPLAY_ROUND = document.getElementById("round"); 
     DISPLAY_TIME = document.getElementById("timer");
@@ -367,6 +368,7 @@ function addMenuEventListeners(){
     ORIENTATION_SELECT.addEventListener("change", checkExpansionValidity);
     EXPAND_BUTTON.addEventListener("click", expandCompletedPuzzle);
     EXPORTPUZZLE_BUTTON.addEventListener("click", exportCanvas);
+    LOADING_SCREEN.addEventListener("mousedown", removeLoadScreen);
 
 }
 
@@ -382,6 +384,13 @@ function addEventListeners(){
     CANVAS.addEventListener("touchmove", onTouchMove);
     CANVAS.addEventListener("touchend", onTouchEnd);
 
+}
+
+function removeLoadScreen(){
+    //Checks if the images are there and if they are then remove the overlay 
+    if(NEXT_IMAGE_LEFT !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_TOP !== null){
+        LOADING_SCREEN.style.display = 'none';
+     }
 }
 
 /**
@@ -461,11 +470,7 @@ function calculateMousePosition(evt, touch){
  * @param {object} touchEvent - The actual touch event object (to prevent default action)
  */
 function onMouseDown(evt, touch, touchEvent){
-    //Checks if the images are there and if they are then remove the overlay 
-    if(NEXT_IMAGE_LEFT !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_TOP !== null){
-        document.getElementById('overlay').style.display = 'none';
-    }
-
+   
     var mouseX = calculateMousePosition(evt, touch).mouseX; 
     var mouseY = calculateMousePosition(evt, touch).mouseY; 
     
@@ -1454,11 +1459,11 @@ async function waitForBottomImage(){
 
 
 function checkLeftImage(){
-    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    LOADING_SCREEN.style.display = 'block'; //Displays the overlay 
     return waitForLeftImage().then((notNull) => {
         console.log("LEFT IMAGE IS AVAILABLE : " + notNull); 
         if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null){
-            document.getElementById('overlay').style.display = 'none';
+            LOADING_SCREEN.style.display = 'none';
         }    
         return notNull; 
     });
@@ -1471,11 +1476,11 @@ function checkLeftImage(){
 
 
 function checkRightImage(){
-    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    LOADING_SCREEN.style.display = 'block'; //Displays the overlay 
     return waitForRightImage().then((notNull) => {
         console.log("RIGHT IMAGE IS AVAILABLE : " + notNull); 
         if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_LEFT !== null){
-            document.getElementById('overlay').style.display = 'none';
+            LOADING_SCREEN.style.display = 'none';
         }        
         return notNull; 
     });
@@ -1488,11 +1493,11 @@ function checkRightImage(){
  */
 
 function checkBottomImage(){
-    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    LOADING_SCREEN.style.display = 'block'; //Displays the overlay 
     return waitForBottomImage().then((notNull) => {
         console.log("BOTTOM IMAGE IS AVAILABLE : " + notNull); 
         if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
-            document.getElementById('overlay').style.display = 'none';
+            LOADING_SCREEN.style.display = 'none';
         }
         return notNull; 
     });
@@ -1504,11 +1509,11 @@ function checkBottomImage(){
  */
 
 function checkTopImage(){
-    document.getElementById('overlay').style.display = 'block'; //Displays the overlay 
+    LOADING_SCREEN.style.display = 'block'; //Displays the overlay 
     return waitForTopImage().then((notNull) => {
         console.log("TOP IMAGE IS AVAILABLE : " + notNull); 
         if(NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
-            document.getElementById('overlay').style.display = 'none';
+            LOADING_SCREEN.style.display = 'none';
         }
         return notNull;
     });

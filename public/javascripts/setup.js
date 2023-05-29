@@ -102,6 +102,34 @@ function selectImage(){
             IMAGE_PATH = "./images/VanGogh.png"; 
             SET_IMAGE = true; 
             break; 
+        case "PEARL_EARRING":
+            IMAGE_PATH = "./images/girl_with_a_pearl_earring_Johannes_Vermeer.png"; 
+            SET_IMAGE= true; 
+            break; 
+        case "ROMAN":
+            IMAGE_PATH = "./images/In_A_Roman_Osteria_by_Carl_Bloch.png"; 
+            SET_IMAGE= true; 
+            break; 
+        case "DOG":
+            IMAGE_PATH = "./images/Kat bespiedt vogels bij een slapende hond.png"; 
+            SET_IMAGE= true; 
+            break;
+        case "MONA":
+            IMAGE_PATH = "./images/mona_lisa.png"; 
+            SET_IMAGE= true; 
+            break;
+        case "KITTEN":
+            IMAGE_PATH = "./images/Perplexed_Kittens.png"; 
+            SET_IMAGE= true; 
+            break;
+        case "WAVE":
+            IMAGE_PATH = "./images/the_Wave_off_Kanagawa.png"; 
+            SET_IMAGE= true; 
+            break;
+        case "INTRUDER":
+            IMAGE_PATH = "./images/An Unwelcome Intruder.png"; 
+            SET_IMAGE= true; 
+            break;
         default:
             SET_IMAGE = false; 
             break; 

@@ -488,10 +488,13 @@ select option:first-of-type{
   .about-section {
     position: relative;
     width: 60%;
-    margin: 10% auto;
+    height:60%;
+    margin:10% auto;
     padding: 40px;
     background-color: white;
     border-radius: 20px;
+    overflow: auto;
+    scrollbar-width: none;
   }
   
   .about-section a {
