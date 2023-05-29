@@ -265,51 +265,41 @@ div#puzzleContainer{
 }
 
 
-.controls #expand_button{ /*The expand button of the completed puzzle dialog*/
+.controls #expand_button,
+#exportPuzzle_Button,
+#GO,
+.controls #end_session {
     padding: 8px 32px;
-    margin-right: 7px; 
     color: #333333;
+    border-radius: 5px;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold ;
+    box-shadow: 2px 2px 5px black;
+    cursor: pointer;
+}
+
+.controls #expand_button,
+#exportPuzzle_Button {
+    margin-right: 7px;
     background-color: #eeeeee;
     border: 1px solid #dddddd;
-    border-radius: 5px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold ;
-    box-shadow: 2px 2px 5px black;
-    cursor: pointer;
-
 }
 
-#GO{ /*The GO Button on the starter page*/
-    padding: 8px 32px;
-    color: #333333;
+#GO {
     background-color: #6dc580;
     border: 1px solid #4d9c35;
-    border-radius: 5px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold ;
-    box-shadow: 2px 2px 5px black;
-    cursor: pointer;
-
 }
 
-.controls #end_session{ /*The end session button on the completed puzzle dialog*/
-    padding: 8px 32px;
-    margin-left: 7px; 
-    color: #333333;
+.controls #end_session {
+    margin-top: 7px;
+    margin-left: 7px;
     background-color: #eb9090;
     border: 1px solid #7e1111;
-    border-radius: 5px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold ;
-    box-shadow: 2px 2px 5px black;
-    cursor: pointer;
-
 }
 
- #end_session:hover, #expand_button:hover, #GO:hover {  /*The button hover of the completed puzzle dialog*/
+
+ #end_session:hover, #expand_button:hover, #GO:hover, #exportPuzzle_Button:hover {  /*The button hover of the completed puzzle dialog*/
     background-color: lightslategray;
     color: white;
     border: 1px solid #dddddd;
@@ -349,74 +339,45 @@ label {
     background-color: rgba(255, 7, 7, 0.4);
     border-radius: 5px;
 }
-
-#textPrompt{ /*Edits the prompt textbox of the completed puzzle dialog*/
-
-    padding-top: 8px; 
-    padding-bottom: 8px;
-    padding-left: 10px;
-    padding-right:30px;
+#textPrompt,
+#textFirstPrompt,
+#imageSubject,
+#difficulty {
     color: #333333;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-style: normal;
+    padding: 8px 12px;
+}
+
+#textPrompt,
+#textFirstPrompt {
     background-color: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 3px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: light ;
     box-shadow: 2px 2px 5px rgb(90, 90, 90);
-    margin-top: 2dvh;
-
-}
-
-#textFirstPrompt{ /*Edits the prompt textbox of the welcome page dialog*/
-
-    padding-top: 8px; 
-    padding-bottom: 8px;
+    font-weight: light;
     padding-left: 10px;
-    padding-right:30px;
-    width:25dvw;
-    color: #333333;
-    background-color: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: light ;
-    box-shadow: 2px 2px 5px rgb(90, 90, 90);
-
+    padding-right: 30px;
 }
 
-#imageSubject{ 
+#textPrompt {
+    margin-top: 2vh;
+}
 
-    padding: 8px 12px; 
-    width:25dvw; 
-    color: #333333;
+#textFirstPrompt {
+    width: 25vw;
+}
+
+#imageSubject,
+#difficulty {
     background-color: #eeeeee;
     border: 3px solid rgba(117, 117, 117, 0.486);
-    cursor: pointer;
     border-radius: 5px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
+    cursor: pointer;
     text-decoration: none;
-    font-style: normal;
-
-
-
+    width: 25vw;
 }
 
-#difficulty{
-
-    padding: 8px 12px; 
-    width:25dvw; 
-    color: #333333;
-    background-color: #eeeeee;
-    border: 3px solid rgba(117, 117, 117, 0.486);
-    cursor: pointer;
-    border-radius: 5px;
-    font-family: 'Century Gothic', Helvetica, sans-serif;
-    text-decoration: none;
-    font-style: normal;
-
-}
 
 .orientation{
     padding: 8px 12px; 
