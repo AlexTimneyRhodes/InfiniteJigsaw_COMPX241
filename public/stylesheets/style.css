@@ -495,6 +495,7 @@ select option:first-of-type{
     border-radius: 20px;
     overflow: auto;
     scrollbar-width: none;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
   }
 
   .about-section a {
