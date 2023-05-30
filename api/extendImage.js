@@ -109,7 +109,7 @@ async function shiftImage(imagePath, direction) {
     .extend(extendParams)
     .toBuffer();
 
-  const shiftedImagePath = `temp-shifted-${uuidv4()}.png`;
+  const shiftedImagePath = `public/gen/temp-shifted-${uuidv4()}.png`;
   fs.writeFileSync(shiftedImagePath, shiftedImage);
 
   return shiftedImagePath;

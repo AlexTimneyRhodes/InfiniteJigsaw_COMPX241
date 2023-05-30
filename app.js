@@ -5,6 +5,11 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const port = process.env.PORT || 3030;
 
+// Importing cleanup function
+const cleanup = require('./cleanup');
+// Starting cleanup process
+cleanup();
+
 // Importing API's
 const extendImage = require('./api/extendImage');
 
