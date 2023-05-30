@@ -129,7 +129,7 @@ function calculateTotal(obj){
 }
 
 function wellFormattedTotal(obj){
-  return obj["seconds"] + ":" + obj["minutes"] + ":" + obj["hours"];
+  return obj["hours"] + ":" + obj["minutes"] + ":" + obj["seconds"];
 }
 /*
 * Wrapper function for checking credentials

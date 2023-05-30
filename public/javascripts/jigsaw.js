@@ -1593,7 +1593,7 @@ function updateHighScores(){
         seconds: seconds,
         minutes: minutes,
         hours: hours,
-        rounds: Number(EXPANSION_COUNT),
+        rounds: Number(EXPANSION_COUNT) + 1,
         difficulty: difficultyLevel};
     // Turning object into url-Encoded key/value pairs
     let urlEncodedData = "";
