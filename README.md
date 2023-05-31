@@ -46,7 +46,7 @@ OPENAI_API_KEY=YOUR_KEY_HERE
 ```sh
 this is the name of the webapp as it appears on its azure webapp page
 ```
-* AZURE_WEBAPP_PUBLISH_PROFILE
+3. AZURE_WEBAPP_PUBLISH_PROFILE
 ```sh
 Download the publish profile using the button on the webapps' page, copy paste its contents here
 ```
