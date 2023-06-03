@@ -13,33 +13,50 @@
       <h2>INFINITE JIGSAW EXPANSION</h2>
       <hr>
       <p class= "textRegular">
-        You have completed the puzzle! To expand your puzzle, select the <b>edge</b> that you want to expand your puzzle from and enter the prompt for the <b>following</b> puzzle. 
+      Well Done! You have completed the puzzle!
       </p>
       <hr>
+      <br>
+      <div id = "prevPromptDescript" class = "textBold">
+          You have chosen the subject of your next puzzle to be: <b>CATS</b> 
+      </div>
+     
       <div class = "userInput">
-        <div>
-        <label id= "labelPrompt" for="textPrompt">NEXT Prompt: </label>
-        <input type="text" id="textPrompt" placeholder="Enter prompt here...">
+        <br>
+        <div id = "prevPromptDescript" class = "textBold">
+          Select the edge from which you want to expand your NEXT puzzle 
         </div>
+        <br>
+        <div>
+          <label for="orientation">Edge: </label>
+          <select class="orientation">
+              <option value="NULL">Select edge...</option>
+              <option value="LEFT">Left</option>
+              <option value="RIGHT">Right</option>
+              <option value="TOP">Top</option>
+              <option value="BOTTOM">Bottom</option>
+          </select>
+        </div>
+        <br>
+        <hr>
+        <br>
           <div class = "controls" >
+            <div id = "nextPromptDescript" class = "textBold">
+              Enter the PROMPT for the <b>FOLLOWING</b> PUZZLE
+            </div>
             <div>
-              <label for="orientation">Edge: </label>
-              <select class="orientation">
-                  <option value="NULL">Select edge...</option>
-                  <option value="LEFT">Left</option>
-                  <option value="RIGHT">Right</option>
-                  <option value="TOP">Top</option>
-                  <option value="BOTTOM">Bottom</option>
-              </select>
+              <label id= "labelPrompt" for="textPrompt">NEXT Prompt: </label>
+              <input type="text" id="textPrompt" placeholder="Enter prompt here...">
             </div>
               <br>
               <hr>
-              <br>
               <button id = "expand_button">Expand</button>
               <button id = "exportPuzzle_Button">Export Puzzle</button>
               <button id="end_session"  onclick="window.location.href='/leaderboard';">End Session</button>
             </div>
         </div>
+        <br>
+        <br>
     </div>
 
     <div id ="puzzleContainer">

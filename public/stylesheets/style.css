@@ -18,8 +18,8 @@ div#puzzleContainer{
 
 #finishPuzzleMenuItems{
     position: absolute;
-    width: 400px;
-    height:450px;
+    /* width: 50%;
+    height:75%; */
     top: 50%;
     left: 50%;
     transform:translate(-50%, -50%);
@@ -29,6 +29,7 @@ div#puzzleContainer{
     border-width: 10px;
     border-radius: 2dvh;
     display:none;
+    overflow:auto; 
 
 }
 
@@ -109,6 +110,12 @@ div#puzzleContainer{
         width:10dvw;
     }
 
+    #finishPuzzleMenuItems{
+        width: 40%;
+        height:52%;
+    }
+
+
 }
 
 @media(max-width: 1200px){ /*Edits the display for regular 15" laptop screens*/
@@ -143,6 +150,11 @@ div#puzzleContainer{
 
     #GO{
         margin-bottom: 5%;
+    }
+
+    #finishPuzzleMenuItems{
+        width: 50%;
+        height:75%;
     }
 
 }
@@ -216,6 +228,19 @@ div#puzzleContainer{
 
 }
 
+.textBold { /*The regular text font in the welcome page dialog*/
+
+    text-align: center;
+    color:white;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+    padding-left: 1dvw;
+    padding-right: 1dvw;
+
+
+}
+
 .textList { /*The list of instructions in the welcome page dialog*/
 
     text-align: left;
@@ -245,8 +270,6 @@ div#puzzleContainer{
 
 
 .controls{ /*The controls of the completed puzzle dialog*/
-    margin-top: 10%;
-    transform: translate(0%, -10%);
     height: auto;
     text-align: center;
     position: relative;
@@ -281,6 +304,7 @@ div#puzzleContainer{
 
 .controls #expand_button,
 #exportPuzzle_Button {
+    margin-top: 7px;
     margin-right: 7px;
     background-color: #eeeeee;
     border: 1px solid #dddddd;

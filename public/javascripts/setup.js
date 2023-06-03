@@ -165,7 +165,7 @@ function goToPuzzle(){
  * @param {integer} daysToLive - The expiration date of the cookie
  */
 
-function setCookie(name, value, daysToLive){
+export function setCookie(name, value, daysToLive){
     const date = new Date();
     date.setTime(date.getTime() + (daysToLive * 24 * 60 * 60 * 1000));
     let expires = "expires=" + date.toUTCString();

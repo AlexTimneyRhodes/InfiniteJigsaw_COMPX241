@@ -292,7 +292,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //Gets the prompt entered by the user in the welcome page
     var prompt = setup.getCookie("firstPrompt");
-
+    //Set the previous prompt as a cookie 
+    setup.setCookie("prevPrompt", prompt, 365);
     //Fetches the next images according to the prompt given
     fetchExtendedImageLeft(IMAGE, prompt, "LEFT");
     fetchExtendedImageTop(IMAGE, prompt, "TOP");
@@ -786,6 +787,20 @@ function onMouseUp(){
             checkTopImage();
             checkRightImage();
             checkBottomImage();
+
+            //Change the inner HTML Of the previous prompt message 
+            var prevPrompt = setup.getCookie("prevPrompt"); 
+            var prevPromptMessage = "You have chosen the subject of your NEXT puzzle to be: <b> " + prevPrompt.toUpperCase() + "</b>";
+            var divPromptElement = document.getElementById("prevPromptDescript"); 
+            divPromptElement.innerHTML = prevPromptMessage; 
+            var color = "red";
+            var backgroundColor = "rgba(255, 255, 255, 0.5)";
+            var padding = "5px";
+
+            var innerHTML = divPromptElement.innerHTML;
+            var modifiedHTML = innerHTML.replace(new RegExp(prevPrompt.toUpperCase(), "g"), '<span style="color: ' + color + '; background-color: ' + backgroundColor + '; padding: ' + padding + ';">$&</span>');
+            divPromptElement.innerHTML = modifiedHTML; 
+
         }
 
     }
@@ -1352,6 +1367,8 @@ function expandCompletedPuzzle(){
             fetchExtendedImageTop(prev_image, VALID_NEXT_PROMPT, "TOP");
             fetchExtendedImageRight(prev_image, VALID_NEXT_PROMPT, "RIGHT");
             fetchExtendedImageBottom(prev_image, VALID_NEXT_PROMPT, "BOTTOM");
+            
+            setup.setCookie("prevPrompt", VALID_NEXT_PROMPT, 365);
 
 
 
