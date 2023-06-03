@@ -795,7 +795,7 @@ function onMouseUp(){
             divPromptElement.innerHTML = prevPromptMessage; 
             var color = "red";
             var backgroundColor = "rgba(255, 255, 255, 0.5)";
-            var padding = "5px";
+            var padding = "1px";
 
             var innerHTML = divPromptElement.innerHTML;
             var modifiedHTML = innerHTML.replace(new RegExp(prevPrompt.toUpperCase(), "g"), '<span style="color: ' + color + '; background-color: ' + backgroundColor + '; padding: ' + padding + ';">$&</span>');
