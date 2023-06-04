@@ -269,7 +269,7 @@ export async function fetchExtendedImageBottom(img,prompt, orientation) {
 document.addEventListener("DOMContentLoaded", function(){
     //Displays the timer and gets the completed puzzle dialog element
     COMPLETE_MENU_ITEMS = document.getElementById("finishPuzzleMenuItems");
-    LOADING_SCREEN = document.getElementById('overlay');
+    LOADING_SCREEN = document.getElementById('loader');
     document.getElementById('score').style.display = 'block';
     DISPLAY_ROUND = document.getElementById("round");
     DISPLAY_TIME = document.getElementById("timer");
@@ -294,7 +294,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var prompt = setup.getCookie("firstPrompt");
     //Set the previous prompt as a cookie
     setup.setCookie("prevPrompt", prompt, 365);
-    //Fetches the next images according to the prompt given
+    // //Fetches the next images according to the prompt given
     fetchExtendedImageLeft(IMAGE, prompt, "LEFT");
     fetchExtendedImageTop(IMAGE, prompt, "TOP");
     fetchExtendedImageRight(IMAGE, prompt, "RIGHT");
@@ -1482,7 +1482,7 @@ async function waitForBottomImage(){
 
 
 function checkLeftImage(){
-    LOADING_SCREEN.style.display = 'block'; //Displays the overlay
+    LOADING_SCREEN.style.display = 'flex'; //Displays the overlay
     return waitForLeftImage().then((notNull) => {
         console.log("LEFT IMAGE IS AVAILABLE : " + notNull);
         if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null){
@@ -1499,7 +1499,7 @@ function checkLeftImage(){
 
 
 function checkRightImage(){
-    LOADING_SCREEN.style.display = 'block'; //Displays the overlay
+    LOADING_SCREEN.style.display = 'flex'; //Displays the overlay
     return waitForRightImage().then((notNull) => {
         console.log("RIGHT IMAGE IS AVAILABLE : " + notNull);
         if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_LEFT !== null){
@@ -1516,7 +1516,7 @@ function checkRightImage(){
  */
 
 function checkBottomImage(){
-    LOADING_SCREEN.style.display = 'block'; //Displays the overlay
+    LOADING_SCREEN.style.display = 'flex'; //Displays the overlay
     return waitForBottomImage().then((notNull) => {
         console.log("BOTTOM IMAGE IS AVAILABLE : " + notNull);
         if(NEXT_IMAGE_TOP !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){
@@ -1532,7 +1532,7 @@ function checkBottomImage(){
  */
 
 function checkTopImage(){
-    LOADING_SCREEN.style.display = 'block'; //Displays the overlay
+    LOADING_SCREEN.style.display = 'flex'; //Displays the overlay
     return waitForTopImage().then((notNull) => {
         console.log("TOP IMAGE IS AVAILABLE : " + notNull);
         if(NEXT_IMAGE_BOTTOM !== null && NEXT_IMAGE_RIGHT !== null && NEXT_IMAGE_LEFT !== null){

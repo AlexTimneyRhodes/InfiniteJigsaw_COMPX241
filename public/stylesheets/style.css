@@ -543,3 +543,33 @@ select option:first-of-type{
     color: #333;
   }
 
+#loader{
+    background: rgba(0, 0, 0, 0.8); 
+    background-size: 20%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+
+}
+
+#loader p {
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+    font-family: 'Century Gothic';
+}
+
+#loaderImage{
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0) url(/loader/puzzle3.gif) no-repeat center center;
+    background-size: 100%;
+    height: 150px;
+    width: 300px;
+    z-index: 1000;  
+}
