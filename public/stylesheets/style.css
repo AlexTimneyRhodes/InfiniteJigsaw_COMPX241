@@ -4,22 +4,22 @@ body{
 }
 
 #myCanvas{
-    display: block; 
+    display: block;
 }
 
 div#puzzleContainer{
-    border:#111; 
+    border:#111;
     height:100vh;
     width:100vw;
     overflow: auto;
     cursor: default;
-    
+
 }
 
 #finishPuzzleMenuItems{
     position: absolute;
-    width: 400px;
-    height:450px; 
+    /* width: 50%;
+    height:75%; */
     top: 50%;
     left: 50%;
     transform:translate(-50%, -50%);
@@ -29,13 +29,14 @@ div#puzzleContainer{
     border-width: 10px;
     border-radius: 2dvh;
     display:none;
-    
+    overflow:auto; 
+
 }
 
 #welcomePage{
     position: absolute;
     width: 50%;
-    height:80%; 
+    height:80%;
     top: 70%;
     left: 50%;
     transform:translate(-50%, -70%);
@@ -47,14 +48,14 @@ div#puzzleContainer{
     display:inline-block;
     border-style:ridge;
     box-shadow: 2px 2px 5px black;
-    overflow:auto; 
-    
+    overflow:auto;
+
 }
 
 #finishPuzzleMenuItems h2{
 
     text-align: center;
-    color:white; 
+    color:white;
     font-family: 'Century Gothic', sans-serif;
     font-weight: 550;
 
@@ -63,7 +64,7 @@ div#puzzleContainer{
 
 #welcomePage h1{
     text-align: center;
-    color:white; 
+    color:white;
     font-family: 'Century Gothic', sans-serif;
     font-weight: 550;
     font-size:25;
@@ -74,11 +75,11 @@ div#puzzleContainer{
     #welcomePage h1{
         font-size: 35;
     }
-    
+
     #textListFont{
         font-size:14;
     }
-    
+
     .welcomeItem{
         margin-bottom: 5%;
         display: flex;
@@ -86,7 +87,7 @@ div#puzzleContainer{
         align-items: center;
 
     }
-    
+
     #textFirstPrompt{
         height:8dvh;
         font-size: medium;
@@ -97,7 +98,7 @@ div#puzzleContainer{
         font-size: medium;
     }
 
-    
+
     #imageSubject{
         height:8dvh;
         font-size: medium;
@@ -108,6 +109,12 @@ div#puzzleContainer{
         height:10dvh;
         width:10dvw;
     }
+
+    #finishPuzzleMenuItems{
+        width: 40%;
+        height:52%;
+    }
+
 
 }
 
@@ -135,7 +142,7 @@ div#puzzleContainer{
         align-items: center;
 
 
-    } 
+    }
 
     #labelDifficult{
         margin-right: 8px;
@@ -145,16 +152,21 @@ div#puzzleContainer{
         margin-bottom: 5%;
     }
 
+    #finishPuzzleMenuItems{
+        width: 50%;
+        height:75%;
+    }
+
 }
- 
+
 @media(min-height: 600px){ /*Edits the display for restore down window screens*/
- 
+
     .welcomeItem{
         display: flex;
         flex-direction: row;
         align-items: center;
         margin-bottom: 2%;
-    
+
     }
 
     label{
@@ -193,7 +205,7 @@ div#puzzleContainer{
         top: 50%;
         left: 50%;
         transform:translate(-50%, -50%);
-        
+
     }
 
 
@@ -206,7 +218,7 @@ div#puzzleContainer{
 .textRegular { /*The regular text font in the welcome page dialog*/
 
     text-align: center;
-    color:white; 
+    color:white;
     font-family: 'Century Gothic', Helvetica, sans-serif;
     font-weight: lighter;
     font-size: small;
@@ -216,10 +228,23 @@ div#puzzleContainer{
 
 }
 
+.textBold { /*The regular text font in the welcome page dialog*/
+
+    text-align: center;
+    color:white;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+    padding-left: 1dvw;
+    padding-right: 1dvw;
+
+
+}
+
 .textList { /*The list of instructions in the welcome page dialog*/
 
     text-align: left;
-    color:white; 
+    color:white;
     font-family: 'Century Gothic', Helvetica, sans-serif;
     font-weight: lighter;
     font-size: 12;
@@ -245,8 +270,6 @@ div#puzzleContainer{
 
 
 .controls{ /*The controls of the completed puzzle dialog*/
-    margin-top: 10%;
-    transform: translate(0%, -10%);
     height: auto;
     text-align: center;
     position: relative;
@@ -281,6 +304,7 @@ div#puzzleContainer{
 
 .controls #expand_button,
 #exportPuzzle_Button {
+    margin-top: 7px;
     margin-right: 7px;
     background-color: #eeeeee;
     border: 1px solid #dddddd;
@@ -307,7 +331,7 @@ div#puzzleContainer{
 
 
 
-label { 
+label {
     font-family: 'Century Gothic', Helvetica, sans-serif;
     text-decoration: none;
     font-style: normal;
@@ -335,7 +359,7 @@ label {
 }
 
 #labelDifficult{
-    padding: 5px; 
+    padding: 5px;
     background-color: rgba(255, 7, 7, 0.4);
     border-radius: 5px;
 }
@@ -380,7 +404,7 @@ label {
 
 
 .orientation{
-    padding: 8px 12px; 
+    padding: 8px 12px;
     color: #333333;
     background-color: #eeeeee;
     border: 3px solid rgba(117, 117, 117, 0.486);
@@ -389,7 +413,7 @@ label {
     font-family: 'Century Gothic', Helvetica, sans-serif;
     text-decoration: none;
     font-style: normal;
-    
+
 
 }
 
@@ -439,11 +463,11 @@ select option:first-of-type{
     top:50%;
     transform: translate(-50%,-50%);
     display:none;
-   
+
 }
 
 #innerScoreContainer{
-    display: flex; 
+    display: flex;
     justify-content: center;
 }
 
@@ -484,7 +508,7 @@ select option:first-of-type{
     z-index: 2;
     cursor: pointer;
   }
-  
+
   .about-section {
     position: relative;
     width: 60%;
@@ -495,12 +519,13 @@ select option:first-of-type{
     border-radius: 20px;
     overflow: auto;
     scrollbar-width: none;
+    font-family: 'Century Gothic', Helvetica, sans-serif;
   }
-  
+
   .about-section a {
-    color: #424242; 
-    text-decoration: underline; 
-    font-size: 1.2em; 
+    color: #424242;
+    text-decoration: underline;
+    font-size: 1.2em;
     font-weight: bold;
   }
   .about-section li {
@@ -510,8 +535,41 @@ select option:first-of-type{
     margin-top: 20px;
   }
   .about-section h1 {
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     margin-top: 20px;
   }
-  
-  
+
+  .blacktext{
+    color: #333;
+  }
+
+#loader{
+    background: rgba(0, 0, 0, 0.8); 
+    background-size: 20%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+
+}
+
+#loader p {
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+    font-family: 'Century Gothic';
+}
+
+#loaderImage{
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0) url(/loader/puzzle3.gif) no-repeat center center;
+    background-size: 100%;
+    height: 150px;
+    width: 300px;
+    z-index: 1000;  
+}

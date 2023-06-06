@@ -3,7 +3,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 3100;
 
 // Importing cleanup function
 const cleanup = require('./cleanup');
@@ -18,8 +18,8 @@ const db = require('./db');
 const app = express();
 
 // for handling the image generation 'jobs'
-const uuid = require('uuid'); 
-const queue = new Map(); 
+const uuid = require('uuid');
+const queue = new Map();
 
 
 // Express settings
@@ -61,17 +61,12 @@ app.get('/leaderboard', async (req, res) => {
   // checking credentials
   if(req.session.loggedIn){
     // getting data
-    const result = await db.loadLeaderboards()
+    const result = await db.loadLeaderboards("")
     res.render('leaderboard', {data: result});
   }else{
     res.redirect('/login')
   }
 });
-
-// 404 Page - currently redirecting post requests?s
-// app.use((req,res) => {
-//     res.status(404).render('404');
-// });
 
 // Handling post requests
 app.post('/login', async (req, res) => {
@@ -88,7 +83,7 @@ app.post('/login', async (req, res) => {
         });
       });
     }else{
-      console.log("incorrect username or password")
+      console.log("Incorrect username or password")
       res.redirect('/login' )
     }
 });
@@ -102,9 +97,21 @@ app.post('/register', async (req, res) => {
     }
 });
 app.post('/leaderboard', async (req, res) => {
-    const result = await db.loadLeaderboards()
+    // Checking if filtered
+    var data = req.body;
+    const result = await db.loadLeaderboards(data)
     res.render('leaderboard', {data: result});
 });
+app.post('/puzzle', async (req, res) => {
+  // Checking credentials
+  if(req.session.loggedIn){
+    // Post request sets highscore
+    var data = req.body;
+    // Checking if data is in correct format
+    db.setHighScores(req.session.userName, data);
+  }
+});
+
 
 
 // setting up image extension
