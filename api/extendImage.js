@@ -10,7 +10,7 @@ const dotenv = require("dotenv");
 const { json } = require("express");
 
 // the baseURL of the server, comment out the one that is not being used
-const BASEURL = "https://engen241infinitejigsaw.azurewebsites.net/";
+const BASEURL = "https://www.infinitejigsaw.xyz/";
 //const BASEURL = "http://localhost:3030/";
 
 dotenv.config();
