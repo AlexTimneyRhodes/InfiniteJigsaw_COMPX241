@@ -58,7 +58,7 @@
       #submitBtn:hover{
         background-color: lightgrey;
       }
-    </style>
+     </style>
   </head>
   <body>
     <%- include('header') %>
@@ -89,6 +89,7 @@
         <option value="Rounds">Rounds</option>
       </select>
     </form>
+    <div id = "leaderboard-container">
     <% if(data != null) { %>
       <ul>
         <% for(var i = 0; i < data.length;i++){ %>
@@ -110,5 +111,6 @@
         <% } %>
       </ul>
     <% } %>
+  </div>
   </body>
 </html>
