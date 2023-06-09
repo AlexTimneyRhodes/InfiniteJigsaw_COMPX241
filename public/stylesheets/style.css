@@ -573,3 +573,8 @@ select option:first-of-type{
     width: 300px;
     z-index: 1000;  
 }
+
+#leaderboard-container{
+    height: 90dvh;
+    overflow-y: scroll;
+}
