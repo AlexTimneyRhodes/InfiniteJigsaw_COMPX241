@@ -1,7 +1,7 @@
 # InfiniteJigsaw_COMPX241
 Welcome to the InfiniteJigsaw_COMPX241 project! This is a collaborative project built by Alex Rhodes, Rafeea Siddika and Mahaki Leach. The project is primarily written in JavaScript, with some EJS and CSS. 
 
-## Check out the [Live Demo!](https://engen241infinitejigsaw.azurewebsites.net)
+## Check out the [Live Demo!](https://www.infinitejigsaw.xyz)
 
 # About the Project
 The ultimate goal of the project was to create an infinitely expanding jigsaw puzzle. using the OpenAI API system we are able to extend an image seamlessly in any direction, combining this with a jigsaw puzzle system we are able to create a jigsaw puzzle that can be expanded infinitely in any direction.
